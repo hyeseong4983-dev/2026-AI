@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI의 이해 인터랙티브 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
+        body { 
+            font-family: 'Pretendard', sans-serif; 
+            background-color: #022c22; /* Emerald 950 */
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .tab-btn.active { 
+            color: #34d399; 
+            border-bottom: 2px solid #34d399; 
+            background-color: rgba(6, 78, 59, 0.4); 
+        }
+        .glass-card {
+            background: rgba(6, 78, 59, 0.5); 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 211, 153, 0.1);
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+            z-index: 0;
+        }
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-color: rgba(0, 20, 15, 0.95);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-emerald-50 pb-20">
+
+    <!-- Image Modal -->
+    <div id="image-modal" class="modal-overlay" onclick="closeModal('image-modal')">
+        <button class="absolute top-6 right-6 text-white text-3xl hover:text-emerald-400 transition-colors">
+            <i class="fas fa-times"></i>
+        </button>
+        <img src="AI_HISTORY.PNG" alt="AI History Infographic" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl border border-emerald-500/20" onclick="event.stopPropagation()">
+    </div>
+
+    <!-- Video Modal -->
+    <div id="video-modal" class="modal-overlay" onclick="closeModal('video-modal')">
+        <button class="absolute top-6 right-6 text-white text-3xl hover:text-emerald-400 transition-colors">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="w-full max-w-4xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-emerald-500/20" onclick="event.stopPropagation()">
+            <video id="ai-video" class="w-full h-full" controls>
+                <source src="AI_01.mp4" type="video/mp4">
+                브라우저가 비디오 재생을 지원하지 않습니다.
+            </video>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="hero-gradient py-24 px-6 text-center shadow-2xl border-b border-emerald-900/50">
+        <div class="relative z-10">
+            <div class="inline-block px-4 py-1.5 mb-6 text-xs font-bold tracking-widest text-emerald-400 uppercase bg-emerald-900/40 border border-emerald-500/30 rounded-full">
+                AI Evolution & Governance
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-emerald-300">
+                인공지능(AI)의 이해
+            </h1>
+            <p class="text-lg md:text-xl text-emerald-200/70 max-w-2xl mx-auto leading-relaxed mb-10">
+                단순 자동화에서 창조적 대화로의 도약.<br>생성형 AI 혁명과 신뢰 기반의 거버넌스 인사이트.
+            </p>
+            
+            <!-- Hero CTA Buttons -->
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <button onclick="scrollToContent()" class="w-full sm:w-auto px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-extrabold rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-95 flex items-center justify-center gap-2">
+                    지금 시작하기 <i class="fas fa-arrow-right"></i>
+                </button>
+                <a href="AI_03_PPT.pdf" download="AI_03_PPT.pdf" class="w-full sm:w-auto px-8 py-4 bg-emerald-900/40 hover:bg-emerald-800/60 text-emerald-300 font-bold rounded-xl border border-emerald-500/30 transition-all active:scale-95 flex items-center justify-center gap-2">
+                    <i class="fas fa-file-pdf"></i> 슬라이드 다운로드
+                </a>
+                <button onclick="openVideoModal()" class="w-full sm:w-auto px-8 py-4 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-100 font-bold rounded-xl border border-emerald-400/40 transition-all active:scale-95 flex items-center justify-center gap-2">
+                    <i class="fas fa-play-circle"></i> 동영상 보기
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav id="main-nav" class="flex justify-center bg-emerald-950/80 sticky top-0 z-20 shadow-lg border-b border-emerald-900/30 backdrop-blur-md overflow-x-auto">
+        <button onclick="showTab('history')" id="btn-history" class="tab-btn flex items-center gap-2 px-8 py-5 text-sm font-semibold transition-all whitespace-nowrap text-emerald-700 hover:text-emerald-400 active">
+            <i class="fas fa-layer-group"></i> 발전 단계
+        </button>
+        <button onclick="showTab('tech')" id="btn-tech" class="tab-btn flex items-center gap-2 px-8 py-5 text-sm font-semibold transition-all whitespace-nowrap text-emerald-700 hover:text-emerald-400">
+            <i class="fas fa-brain"></i> 작동 원리
+        </button>
+        <button onclick="showTab('models')" id="btn-models" class="tab-btn flex items-center gap-2 px-8 py-5 text-sm font-semibold transition-all whitespace-nowrap text-emerald-700 hover:text-emerald-400">
+            <i class="fas fa-comments"></i> 모델 비교
+        </button>
+        <button onclick="showTab('ethics')" id="btn-ethics" class="tab-btn flex items-center gap-2 px-8 py-5 text-sm font-semibold transition-all whitespace-nowrap text-emerald-700 hover:text-emerald-400">
+            <i class="fas fa-shield-halved"></i> 리스크 & 거버넌스
+        </button>
+    </nav>
+
+    <main class="max-w-5xl mx-auto mt-12 px-6">
+        
+        <!-- Tab: History -->
+        <div id="history" class="tab-content active animate-in fade-in slide-in-from-top-4 duration-700">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <h2 class="text-3xl font-bold flex items-center gap-3">
+                    <i class="fas fa-bolt text-amber-500/80"></i> 인공지능의 4단계 수준
+                </h2>
+                <button onclick="openModal('image-modal')" class="flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-emerald-950/40 active:scale-95 border border-emerald-400/30">
+                    <i class="fas fa-image"></i> 인포그래픽으로 보기
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16" id="levels-container">
+                <!-- Levels will be injected via JS -->
+            </div>
+
+            <div class="glass-card p-10 rounded-3xl border border-emerald-800/50 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="fas fa-history text-8xl text-emerald-500"></i>
+                </div>
+                <div class="relative z-10">
+                    <h3 class="text-2xl font-bold mb-6 text-white">역사적 변곡점: 제3차 황금기</h3>
+                    <p class="text-emerald-100/70 leading-relaxed mb-8 text-lg">
+                        과거의 AI가 정해진 규칙에 의존했다면, 현재의 생성형 AI는 <strong>방대한 비정형 데이터</strong>를 
+                        학습하여 스스로 언어의 통계적 법칙을 깨우쳤습니다.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-emerald-900/30 p-6 rounded-2xl border border-emerald-700/50">
+                            <h4 class="font-bold text-emerald-400 mb-3 flex items-center gap-2">
+                                <i class="fas fa-microscope"></i> 기존 판별형 AI
+                            </h4>
+                            <p class="text-sm text-emerald-200/60 leading-relaxed">데이터의 분류와 패턴 인식 중심. 정답이 명확한 지도 학습 환경에서 탁월한 성능을 발휘합니다.</p>
+                        </div>
+                        <div class="bg-emerald-600/20 p-6 rounded-2xl border border-emerald-400/30">
+                            <h4 class="font-bold text-emerald-300 mb-3 flex items-center gap-2">
+                                <i class="fas fa-wand-magic-sparkles"></i> 현대 생성형 AI
+                            </h4>
+                            <p class="text-sm text-emerald-200/60 leading-relaxed">지능형 파트너로서 텍스트와 이미지를 창조합니다. 단순 업무의 자동화를 넘어 창의적 워크플로우를 재편합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tech Tab -->
+        <div id="tech" class="tab-content animate-in fade-in duration-700">
+             <h2 class="text-3xl font-bold mb-8 flex items-center gap-3 text-white">
+                <i class="fas fa-microchip text-emerald-400"></i> 마법 같은 문장 생성의 비밀
+            </h2>
+            <p class="text-emerald-200/70 mb-8">대규모 언어 모델(LLM)의 핵심인 트랜스포머 아키텍처와 어텐션 메커니즘을 탐구합니다.</p>
+        </div>
+        
+        <!-- Models Tab -->
+        <div id="models" class="tab-content animate-in fade-in duration-700">
+             <h2 class="text-3xl font-bold mb-8 flex items-center gap-3 text-white">
+                <i class="fas fa-robot text-emerald-400"></i> 주요 생성형 AI 서비스 분석
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="models-container"></div>
+        </div>
+
+        <!-- Ethics Tab -->
+        <div id="ethics" class="tab-content animate-in fade-in duration-700">
+             <h2 class="text-3xl font-bold mb-8 flex items-center gap-3 text-white">
+                <i class="fas fa-shield-halved text-rose-400/80"></i> 리스크 & 거버넌스
+            </h2>
+            <p class="text-emerald-200/70">인공지능의 안전한 활용을 위한 법적, 윤리적 프레임워크를 확인하세요.</p>
+        </div>
+
+    </main>
+
+    <footer class="mt-20 border-t border-emerald-900 pt-16 text-center text-emerald-800 text-xs tracking-widest pb-10">
+        <p class="mb-2 uppercase">Strategic AI Briefing & Evolution</p>
+        <p>© 2025 GREEN TECH INSIGHTS. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <script>
+        const levels = [
+            { id: 1, title: '레벨 1: 단순 자동화', desc: '학습 기능이 결여된 고정 알고리즘 기반. (예: 에어컨 자동 온도 조절기)', accent: 'border-emerald-800/50' },
+            { id: 2, title: '레벨 2: 제한적 적응', desc: '규칙 기반으로 특정 패턴을 인식하고 제한적으로 적응. (예: 가전제품 스마트 모드)', accent: 'border-emerald-700/50' },
+            { id: 3, title: '레벨 3: 자기 학습', desc: '데이터를 축적하고 스스로 성능을 개선하는 머신러닝. (예: 검색 엔진)', accent: 'border-emerald-600/50' },
+            { id: 4, title: '레벨 4: 자율 지능', desc: '복합적 문제 해결과 강화 학습을 통한 고차원 자율성. (예: 에이전틱 AI)', accent: 'border-emerald-400/40 bg-emerald-900/20' },
+        ];
+
+        const models = [
+            { name: 'ChatGPT', model: 'GPT-4o', strength: '범용성 & 멀티모달', desc: '텍스트, 이미지, 음성을 동시 처리하는 백과사전식 지식 제공' },
+            { name: 'Claude', model: 'Claude 3.5', strength: '안전성 & 대용량 맥락', desc: '헌법적 AI 기반의 윤리적 답변 및 탁월한 논리 추론' },
+            { name: 'Gemini', model: 'Gemini 1.5 Pro', strength: '생태계 연동 & 실시간성', desc: 'Google 워크스페이스와의 완벽한 연동 및 빠른 정보 반영' }
+        ];
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + tabId).classList.add('active');
+            
+            const nav = document.getElementById('main-nav');
+            window.scrollTo({ top: nav.offsetTop - 20, behavior: 'smooth' });
+        }
+
+        function scrollToContent() {
+            const nav = document.getElementById('main-nav');
+            window.scrollTo({ top: nav.offsetTop - 20, behavior: 'smooth' });
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function openVideoModal() {
+            openModal('video-modal');
+            document.getElementById('ai-video').play();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            if (modalId === 'video-modal') {
+                const video = document.getElementById('ai-video');
+                video.pause();
+                video.currentTime = 0;
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal('image-modal');
+                closeModal('video-modal');
+            }
+        });
+
+        window.onload = function() {
+            const levelsContainer = document.getElementById('levels-container');
+            levels.forEach(level => {
+                const div = document.createElement('div');
+                div.className = `glass-card p-8 rounded-[2rem] border ${level.accent} hover:shadow-[0_0_25px_rgba(16,185,129,0.1)] transition-all`;
+                div.innerHTML = `
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-[10px] font-black tracking-widest text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded border border-emerald-400/20">LV.0${level.id}</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-emerald-50">${level.title}</h3>
+                    <p class="text-sm text-emerald-200/50 leading-relaxed">${level.desc}</p>
+                `;
+                levelsContainer.appendChild(div);
+            });
+
+            const modelsContainer = document.getElementById('models-container');
+            if(modelsContainer) {
+                models.forEach(model => {
+                    const div = document.createElement('div');
+                    div.className = "glass-card p-8 rounded-[2rem] border border-emerald-800/50 hover:border-emerald-400/30 transition-all group";
+                    div.innerHTML = `
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h3 class="font-black text-2xl text-white group-hover:text-emerald-400 transition-colors">${model.name}</h3>
+                                <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-tighter">${model.model}</p>
+                            </div>
+                        </div>
+                        <p class="text-emerald-200/40 text-sm leading-relaxed mb-4">${model.desc}</p>
+                    `;
+                    modelsContainer.appendChild(div);
+                });
+            }
+        };
+    </script>
+</body>
+</html>
