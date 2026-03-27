@@ -56,7 +56,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Colorful & Modern Card Styles */
+        /* Upgraded Card Styles */
         .project-card {
             position: relative;
             overflow: hidden;
@@ -73,14 +73,12 @@
             box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.05);
         }
 
-        /* Dynamic Glow Effect on Hover */
         .project-card:hover {
             transform: translateY(-15px) scale(1.02);
             border-color: var(--card-color);
             box-shadow: 0 20px 40px -10px var(--card-glow);
         }
 
-        /* Card Mesh Decoration - More Colorful */
         .card-mesh {
             position: absolute;
             top: -20%;
@@ -124,16 +122,27 @@
             transition: transform 0.3s ease;
         }
 
-        .project-card:hover .tag-pill {
-            transform: scale(1.1);
+        .btn-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
         }
 
-        @keyframes spin-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow {
-            animation: spin-slow 12s linear infinite;
+        .btn-action:hover {
+            background: var(--card-color);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px var(--card-glow);
         }
     </style>
 </head>
@@ -189,7 +198,7 @@
         </div>
 
         <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <!-- Cards Injected Here -->
+            <!-- Cards Injected via Script -->
         </div>
     </section>
 
@@ -197,70 +206,31 @@
     <section id="about" class="py-40 bg-slate-500/5 dark:bg-white/5 backdrop-blur-xl border-y border-white/5">
         <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
             <div class="relative group" data-aos="fade-right">
-                <!-- Background Glow -->
                 <div class="absolute -inset-4 bg-gradient-to-tr from-cyan-400 to-purple-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                
-                <!-- Profile Image Container -->
                 <div class="relative bg-white dark:bg-black rounded-3xl overflow-hidden aspect-[4/5] flex items-center justify-center border border-white/10 shadow-2xl transition-all duration-500 group-hover:scale-[1.02]">
                     <img 
                         id="profile-image"
                         src="https://www.pusan.ac.kr/_contents/kor/_Img/07Intro/character01.jpg" 
-                        alt="[오혜성 프로필 사진 - 부산대학교 캐릭터]" 
+                        alt="프로필 사진" 
                         class="w-full h-full object-contain p-4 opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                        onerror="this.style.display='none'; document.getElementById('image-placeholder').classList.remove('hidden');"
                     >
-                    
-                    <!-- Placeholder (이미지 로드 실패 시 나타남) -->
-                    <div id="image-placeholder" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-900">
-                        <svg class="w-20 h-20 text-slate-300 dark:text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                        <span class="text-xs font-mono opacity-30 tracking-widest">IMAGE NOT FOUND</span>
-                    </div>
-
-                    <!-- Decorative Overlay -->
-                    <div class="absolute inset-0 border-[16px] border-white/5 pointer-events-none"></div>
-                    <div class="absolute bottom-6 left-6 right-6">
-                        <div class="w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                    </div>
-                </div>
-
-                <!-- Floating Badge -->
-                <div class="absolute -bottom-6 -right-6 px-8 py-4 bg-white dark:bg-dark border border-white/10 shadow-xl rounded-2xl z-20 transition-transform group-hover:-translate-y-2">
-                    <p class="text-[10px] font-black tracking-widest text-cyan-500 uppercase mb-1">Status</p>
-                    <p class="text-sm font-bold">Available for Policy Research</p>
                 </div>
             </div>
-
             <div data-aos="fade-left">
-                <div class="mb-4 inline-block px-3 py-1 rounded-full border border-cyan-500/30 text-cyan-500 text-[10px] font-black tracking-widest uppercase">
+                <div class="mb-4 inline-block px-3 py-1 rounded-full border border-cyan-500/30 text-cyan-500 text-[10px] font-black tracking-widest uppercase text-center">
                     Portfolio Author
                 </div>
                 <h2 class="text-5xl font-black mb-2">오혜성</h2>
-                <p class="text-xl font-bold text-cyan-500 mb-8 tracking-tight">사회과학대학 행정학과 | 202205129</p>
-                
+                <p class="text-xl font-bold text-cyan-500 mb-8 tracking-tight text-center md:text-left">사회과학대학 행정학과 | 202205129</p>
                 <div class="space-y-6 text-lg leading-relaxed opacity-80">
-                    <p>
-                        "사회과학대학 소속으로 국가 전반의 정책과 행정 요소들을 
-                        <span class="text-slate-900 dark:text-white font-bold underline decoration-cyan-500/50 underline-offset-4">과학적인 데이터 기반으로 분석</span>하는 데 깊은 관심이 있습니다."
-                    </p>
-                    <p class="text-base">
-                        복잡한 사회 문제를 단순한 직관이 아닌 객관적 지표로 풀어내고, 
-                        AI 기술을 도구 삼아 더 효율적이고 공정한 공공 서비스를 설계하는 전문가를 꿈꿉니다.
-                    </p>
-                </div>
-
-                <div class="mt-12 flex flex-wrap gap-3">
-                    <div class="px-6 py-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 text-sm font-bold transition-all hover:bg-cyan-500 hover:text-white cursor-default">#DataDriven</div>
-                    <div class="px-6 py-3 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-500 text-sm font-bold transition-all hover:bg-purple-500 hover:text-white cursor-default">#AI_Policy</div>
-                    <div class="px-6 py-3 rounded-xl bg-slate-500/10 border border-slate-500/20 text-slate-500 text-sm font-bold transition-all hover:bg-slate-500 hover:text-white cursor-default">#Public_Admin</div>
+                    <p>"사회과학대학 소속으로 국가 전반의 정책과 행정 요소들을 <span class="text-slate-900 dark:text-white font-bold underline decoration-cyan-500/50 underline-offset-4">과학적인 데이터 기반으로 분석</span>하는 데 깊은 관심이 있습니다."</p>
                 </div>
             </div>
         </div>
     </section>
 
     <footer class="py-16 text-center opacity-30 text-xs font-mono tracking-widest">
-        &copy; 2024 OH HYE SUNG // AI LITERACY PORTFOLIO SYSTEM v1.3
+        &copy; 2024 OH HYE SUNG // AI LITERACY PORTFOLIO SYSTEM v1.4
     </footer>
 
     <script>
@@ -268,11 +238,6 @@
 
         const themeToggle = document.getElementById('theme-toggle');
         const html = document.documentElement;
-
-        if (localStorage.getItem('theme') === 'light') {
-            html.classList.remove('dark');
-            html.classList.add('light');
-        }
 
         themeToggle.addEventListener('click', () => {
             if (html.classList.contains('dark')) {
@@ -285,8 +250,26 @@
         });
 
         const projects = [
-            { id: 1, title: "AI의 이해", tools: "NotebookLM", result: "구글 노트북LM을 활용하여 AI의 이해는 무엇이고 AI의 역사와 생성형 AI에 대해 자료 정리하는 실습", color: "#00d2ff", glow: "rgba(0, 210, 255, 0.4)", link: "./02/index.html" },
-            { id: 2, title: "프롬프트 엔지니어링", tools: "Claude", result: "정책 입안을 위한 논리적 페르소나 설계 및 다층적 답변 최적화", color: "#9d50bb", glow: "rgba(157, 80, 187, 0.4)" },
+            { 
+                id: 1, 
+                title: "AI의 이해", 
+                tools: "NotebookLM", 
+                result: "구글 노트북LM을 활용하여 AI의 정의부터 70년 역사적 흐름 및 생성형 AI의 핵심 구조를 정리하고 행정 혁신의 청사진을 도출하는 실습 수행", 
+                color: "#00d2ff", 
+                glow: "rgba(0, 210, 255, 0.4)",
+                link: "./02/index.html",
+                btnText: "결과물 보기"
+            },
+            { 
+                id: 2, 
+                title: "데이터 스토리텔링", 
+                tools: "Gemini 스토리텔링", 
+                result: "", // 요청에 따라 기존 텍스트 삭제
+                color: "#9d50bb", 
+                glow: "rgba(157, 80, 187, 0.4)",
+                link: "./03/index.html",
+                btnText: "결과보기"
+            },
             { id: 3, title: "파이썬 데이터 시각화", tools: "Python", result: "공공 데이터를 활용한 지역별 행정 서비스 만족도 분석 및 인포그래픽", color: "#3a86ff", glow: "rgba(58, 134, 255, 0.4)" },
             { id: 4, title: "생성형 AI 이미지 분석", tools: "DALL-E 3", result: "미래 도시 계획 시뮬레이션을 위한 조감도 생성 및 AI 비주얼 리서치", color: "#ff006e", glow: "rgba(255, 0, 110, 0.4)" },
             { id: 5, title: "데이터 크롤링 실습", tools: "Selenium", result: "국내외 주요 정책 관련 뉴스 실시간 크롤링 및 감성 분석 대시보드", color: "#fb5607", glow: "rgba(251, 86, 7, 0.4)" },
@@ -301,20 +284,21 @@
 
         projects.forEach((proj, index) => {
             const card = document.createElement('div');
-            card.className = "project-card p-8 group h-[380px] flex flex-col justify-between cursor-default";
+            card.className = "project-card p-8 group h-[420px] flex flex-col justify-between cursor-default";
             card.style.setProperty('--card-color', proj.color);
             card.style.setProperty('--card-glow', proj.glow);
             card.setAttribute('data-aos', 'fade-up');
             card.setAttribute('data-aos-delay', (index % 4) * 100);
             
-            // 첫 번째 카드인 경우 버튼들을 추가
             let actionButtons = '';
-            if (proj.id === 1) {
+            if (proj.link) {
                 actionButtons = `
-                    <div class="mt-4 flex gap-2">
-                        <button onclick="window.location.href='${proj.link}'" class="flex-grow py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-[11px] font-bold tracking-tight transition-all">결과물 보기</button>
-                        <button onclick="window.location.href='${proj.link}'" class="w-10 flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl transition-all">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    <div class="mt-6 flex gap-3">
+                        <button onclick="window.location.href='${proj.link}'" class="btn-action flex-grow">
+                            ${proj.btnText}
+                        </button>
+                        <button onclick="window.location.href='${proj.link}'" class="btn-action w-12 p-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                         </button>
                     </div>
                 `;
@@ -335,9 +319,7 @@
                 </div>
                 
                 <div class="relative z-10">
-                    <p class="text-sm opacity-60 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 leading-relaxed line-clamp-3">
-                        ${proj.result}
-                    </p>
+                    ${proj.result ? `<p class="text-[13px] opacity-60 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 leading-relaxed line-clamp-4 mb-2">${proj.result}</p>` : ''}
                     ${actionButtons}
                     <div class="mt-6 flex items-center text-[10px] font-black tracking-[0.2em] transition-all duration-500 group-hover:tracking-[0.3em]" style="color: ${proj.color}">
                         ASSIGNMENT VIEW
