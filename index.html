@@ -3,331 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 리터러시 포트폴리오 | 오혜성</title>
+    <title>데이터 스토리텔링 | 오혜성 포트폴리오</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        dark: '#0a0a0c',
-                        accentBlue: '#00d2ff',
-                        accentPurple: '#9d50bb',
-                    }
-                }
-            }
-        }
-    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@100;400;700;900&display=swap');
 
         body {
             font-family: 'Pretendard', sans-serif;
-            transition: background-color 0.5s ease, color 0.5s ease;
+            background-color: #0a0a0c;
+            color: #ffffff;
+            overflow-x: hidden;
         }
 
-        /* Animated Background */
-        .bg-gradient-animate {
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
+        /* 보랏빛 감성의 배경 애니메이션 */
+        .bg-glow {
+            background: radial-gradient(circle at 80% -20%, rgba(157, 80, 187, 0.25) 0%, transparent 50%),
+                        radial-gradient(circle at -20% 120%, rgba(0, 210, 255, 0.15) 0%, transparent 50%);
             position: fixed;
             width: 100%;
             height: 100%;
             z-index: -1;
             top: 0;
             left: 0;
-            opacity: 0.8;
+            filter: blur(60px);
         }
 
-        .dark .bg-gradient-animate {
-            background: linear-gradient(-45deg, #0a0a0c, #1a1a2e, #0f0c29, #302b63);
-        }
-
-        .light .bg-gradient-animate {
-            background: linear-gradient(-45deg, #f0f4f8, #e0e7ff, #f5f3ff, #ffffff);
-        }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Upgraded Card Styles */
-        .project-card {
-            position: relative;
-            overflow: hidden;
-            border-radius: 28px;
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .glass-nav {
+            background: rgba(10, 10, 12, 0.6);
             backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .light .project-card {
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.05);
+        .content-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
         }
 
-        .project-card:hover {
-            transform: translateY(-15px) scale(1.02);
-            border-color: var(--card-color);
-            box-shadow: 0 20px 40px -10px var(--card-glow);
+        /* 상단 우측 버튼 스타일링 */
+        .btn-primary {
+            background: linear-gradient(135deg, #9d50bb 0%, #6e48aa 100%);
+            box-shadow: 0 4px 15px rgba(157, 80, 187, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(157, 80, 187, 0.5);
         }
 
-        .card-mesh {
-            position: absolute;
-            top: -20%;
-            right: -20%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, var(--card-color) 0%, transparent 70%);
-            opacity: 0.1;
-            transition: all 0.6s ease;
-            pointer-events: none;
-            z-index: 0;
-            filter: blur(40px);
-        }
-
-        .project-card:hover .card-mesh {
-            opacity: 0.4;
-            transform: scale(1.5);
-        }
-
-        .text-gradient {
-            background: linear-gradient(to right, #00d2ff, #9d50bb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .custom-scroll::-webkit-scrollbar { width: 8px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #00d2ff; }
-
-        .tag-pill {
-            padding: 5px 14px;
-            border-radius: 100px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            background: var(--card-color);
-            color: white;
-            box-shadow: 0 4px 10px var(--card-glow);
-            transition: transform 0.3s ease;
-        }
-
-        .btn-action {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 16px;
-            border-radius: 14px;
-            font-size: 13px;
-            font-weight: 700;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .btn-secondary {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
             cursor: pointer;
         }
-
-        .btn-action:hover {
-            background: var(--card-color);
-            color: white;
-            border-color: transparent;
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px var(--card-glow);
         }
     </style>
 </head>
-<body class="custom-scroll dark:bg-dark dark:text-white light:bg-white light:text-slate-900 overflow-x-hidden">
+<body class="custom-scroll">
 
-    <div class="bg-gradient-animate"></div>
+    <!-- 배경 효과 -->
+    <div class="bg-glow"></div>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-white/10 dark:bg-black/20 backdrop-blur-md border-b border-white/5">
-        <div class="text-xl font-black tracking-tighter italic">AI LITERACY</div>
-        <div class="flex items-center space-x-8">
-            <div class="hidden md:flex space-x-8 text-sm font-medium opacity-70">
-                <a href="#hero" class="hover:text-cyan-400 transition">HOME</a>
-                <a href="#portfolio" class="hover:text-cyan-400 transition">WORKS</a>
-                <a href="#about" class="hover:text-cyan-400 transition">ABOUT</a>
+    <!-- 네비게이션 바 -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center glass-nav">
+        <!-- 왼쪽: 뒤로 가기 및 타이틀 -->
+        <div class="flex items-center space-x-4">
+            <a href="../portfolio.html" class="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-all group">
+                <svg class="w-6 h-6 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+            </a>
+            <div class="text-lg font-black tracking-tighter italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 hidden md:block">
+                ASSIGNMENT 02 : DATA STORYTELLING
             </div>
-            <button id="theme-toggle" class="p-2 rounded-full border border-white/10 hover:bg-white/10 transition-colors">
-                <span id="theme-icon-dark" class="hidden dark:block text-yellow-400">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
-                </span>
-                <span id="theme-icon-light" class="block dark:hidden text-slate-700">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                </span>
+        </div>
+
+        <!-- 오른쪽: 동영상 보기 & 스토리북 버튼 -->
+        <div class="flex items-center space-x-3">
+            <!-- 동영상 보기 버튼 (모달 열기 트리거) -->
+            <button id="open-video-btn" class="btn-secondary flex items-center px-4 py-2.5 rounded-xl text-sm font-bold text-gray-200">
+                <svg class="w-4 h-4 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM10.414 10l-2.707-2.707A1 1 0 006 8v4a1 1 0 001.707.707L10.414 10zM12 8a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" fill-rule="evenodd"></path>
+                </svg>
+                동영상 보기
+            </button>
+            
+            <!-- 스토리북 버튼 (모달 열기 트리거) -->
+            <button id="open-pdf-btn" class="btn-primary flex items-center px-5 py-2.5 rounded-xl text-sm font-bold text-white">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                스토리북
             </button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="hero" class="min-h-screen flex flex-col justify-center items-center px-4 pt-20">
-        <div class="text-center" data-aos="fade-up" data-aos-duration="1500">
-            <h2 class="text-sm font-bold tracking-[0.6em] text-cyan-500 dark:text-cyan-400 mb-6 uppercase">Future of Public Policy</h2>
-            <h1 class="text-6xl md:text-9xl font-black leading-tight mb-8">
-                AI로 세상을 읽고<br>
-                <span class="text-gradient">데이터로 답하다</span>
-            </h1>
-            <p class="max-w-2xl mx-auto opacity-60 text-lg md:text-xl font-light leading-relaxed">
-                인공지능 리터러시는 현대 행정의 필수 역량.<br>
-                기술을 이해하고 데이터를 통해 더 나은 정책의 미래를 설계하는 포트폴리오.
-            </p>
+    <!-- 메인 헤더 섹션 -->
+    <header class="pt-40 pb-20 px-6 max-w-5xl mx-auto text-center" data-aos="fade-up">
+        <div class="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-black tracking-widest uppercase mb-6">
+            Gemini Storytelling Project
         </div>
-    </section>
+        <h1 class="text-5xl md:text-7xl font-black mb-8 leading-tight">
+            데이터에 숨겨진<br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">맥락과 서사를 발견하다</span>
+        </h1>
+        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+            Google Gemini를 활용하여 건조한 통계 수치를 대중이 공감할 수 있는 
+            정책 스토리로 재구성한 실습 프로젝트입니다.
+        </p>
+    </header>
 
-    <!-- Portfolio Grid -->
-    <section id="portfolio" class="max-w-7xl mx-auto px-6 py-32">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
-            <div data-aos="fade-right">
-                <span class="text-cyan-500 font-bold text-sm tracking-widest uppercase mb-2 block">Case Studies</span>
-                <h3 class="text-4xl font-black">주요 과제 수행 이력</h3>
-            </div>
-            <div class="text-sm opacity-50 font-mono" data-aos="fade-left">
-                [ TOTAL 10 ASSIGNMENTS COMPLETED ]
-            </div>
+    <!-- 프로젝트 상세 컨텐츠 영역 -->
+    <main class="max-w-5xl mx-auto px-6 pb-32" data-aos="fade-up" data-aos-delay="200">
+        <div class="content-card p-12 text-center border-dashed border-white/20 min-h-[400px] flex flex-col items-center justify-center">
+            <svg class="w-16 h-16 text-white/20 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+            <h3 class="text-2xl font-bold text-white/50 mb-2">프로젝트 세부 콘텐츠 영역</h3>
+            <p class="text-white/30 text-sm">상단의 '동영상 보기' 또는 '스토리북' 버튼을 클릭하여 결과물 팝업을 확인하세요.</p>
         </div>
+    </main>
 
-        <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <!-- Cards Injected via Script -->
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-40 bg-slate-500/5 dark:bg-white/5 backdrop-blur-xl border-y border-white/5">
-        <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-            <div class="relative group" data-aos="fade-right">
-                <div class="absolute -inset-4 bg-gradient-to-tr from-cyan-400 to-purple-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                <div class="relative bg-white dark:bg-black rounded-3xl overflow-hidden aspect-[4/5] flex items-center justify-center border border-white/10 shadow-2xl transition-all duration-500 group-hover:scale-[1.02]">
-                    <img 
-                        id="profile-image"
-                        src="https://www.pusan.ac.kr/_contents/kor/_Img/07Intro/character01.jpg" 
-                        alt="프로필 사진" 
-                        class="w-full h-full object-contain p-4 opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                    >
-                </div>
-            </div>
-            <div data-aos="fade-left">
-                <div class="mb-4 inline-block px-3 py-1 rounded-full border border-cyan-500/30 text-cyan-500 text-[10px] font-black tracking-widest uppercase text-center">
-                    Portfolio Author
-                </div>
-                <h2 class="text-5xl font-black mb-2">오혜성</h2>
-                <p class="text-xl font-bold text-cyan-500 mb-8 tracking-tight text-center md:text-left">사회과학대학 행정학과 | 202205129</p>
-                <div class="space-y-6 text-lg leading-relaxed opacity-80">
-                    <p>"사회과학대학 소속으로 국가 전반의 정책과 행정 요소들을 <span class="text-slate-900 dark:text-white font-bold underline decoration-cyan-500/50 underline-offset-4">과학적인 데이터 기반으로 분석</span>하는 데 깊은 관심이 있습니다."</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-16 text-center opacity-30 text-xs font-mono tracking-widest">
-        &copy; 2024 OH HYE SUNG // AI LITERACY PORTFOLIO SYSTEM v1.4
+    <footer class="py-8 text-center border-t border-white/5 text-white/30 text-xs font-mono tracking-widest">
+        &copy; 2024 OH HYE SUNG // DATA STORYTELLING
     </footer>
 
+    <!-- 비디오 팝업 (모달) -->
+    <div id="video-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 hidden backdrop-blur-md opacity-0 transition-opacity duration-300">
+        <div class="relative w-full max-w-5xl px-4 md:px-8">
+            <!-- 닫기 버튼 -->
+            <button id="close-video-btn" class="absolute -top-12 right-4 md:right-8 text-white/70 hover:text-white transition-colors cursor-pointer">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            
+            <!-- 비디오 플레이어 -->
+            <div class="rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black flex justify-center aspect-video">
+                <video id="story-video" class="w-full h-full object-contain" controls>
+                    <source src="./sunomv.mp4" type="video/mp4">
+                    브라우저가 비디오 태그를 지원하지 않습니다.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF 팝업 (모달) -->
+    <div id="pdf-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 hidden backdrop-blur-md opacity-0 transition-opacity duration-300">
+        <div class="relative w-full max-w-6xl px-4 md:px-8 h-[90vh]">
+            <!-- 닫기 버튼 -->
+            <button id="close-pdf-btn" class="absolute -top-12 right-4 md:right-8 text-white/70 hover:text-white transition-colors cursor-pointer z-10">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            
+            <!-- PDF 뷰어 -->
+            <div class="rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-white flex justify-center h-full w-full">
+                <!-- iframe을 사용하여 PDF 임베드 -->
+                <iframe id="story-pdf" src="./04/부산의 파도를 넘어라_compressed.pdf" class="w-full h-full border-none"></iframe>
+            </div>
+        </div>
+    </div>
+
     <script>
-        AOS.init({ duration: 1000, once: true });
-
-        const themeToggle = document.getElementById('theme-toggle');
-        const html = document.documentElement;
-
-        themeToggle.addEventListener('click', () => {
-            if (html.classList.contains('dark')) {
-                html.classList.replace('dark', 'light');
-                localStorage.setItem('theme', 'light');
-            } else {
-                html.classList.replace('light', 'dark');
-                localStorage.setItem('theme', 'dark');
-            }
+        // AOS 애니메이션 초기화
+        AOS.init({
+            duration: 1000,
+            once: true,
+            easing: 'ease-out-quad'
         });
 
-        const projects = [
-            { 
-                id: 1, 
-                title: "AI의 이해", 
-                tools: "NotebookLM", 
-                result: "구글 노트북LM을 활용하여 AI의 정의부터 70년 역사적 흐름 및 생성형 AI의 핵심 구조를 정리하고 행정 혁신의 청사진을 도출하는 실습 수행", 
-                color: "#00d2ff", 
-                glow: "rgba(0, 210, 255, 0.4)",
-                link: "./02/index.html",
-                btnText: "결과물 보기"
-            },
-            { 
-                id: 2, 
-                title: "데이터 스토리텔링", 
-                tools: "Gemini 스토리텔링", 
-                result: "", // 요청에 따라 기존 텍스트 삭제
-                color: "#9d50bb", 
-                glow: "rgba(157, 80, 187, 0.4)",
-                link: "./03/index.html",
-                btnText: "결과보기"
-            },
-            { id: 3, title: "파이썬 데이터 시각화", tools: "Python", result: "공공 데이터를 활용한 지역별 행정 서비스 만족도 분석 및 인포그래픽", color: "#3a86ff", glow: "rgba(58, 134, 255, 0.4)" },
-            { id: 4, title: "생성형 AI 이미지 분석", tools: "DALL-E 3", result: "미래 도시 계획 시뮬레이션을 위한 조감도 생성 및 AI 비주얼 리서치", color: "#ff006e", glow: "rgba(255, 0, 110, 0.4)" },
-            { id: 5, title: "데이터 크롤링 실습", tools: "Selenium", result: "국내외 주요 정책 관련 뉴스 실시간 크롤링 및 감성 분석 대시보드", color: "#fb5607", glow: "rgba(251, 86, 7, 0.4)" },
-            { id: 6, title: "AI 윤리와 사회적 영향", tools: "Research", result: "알고리즘 편향성이 공공 행정 결정에 미치는 위험 요인 심층 분석", color: "#ffbe0b", glow: "rgba(255, 190, 11, 0.4)" },
-            { id: 7, title: "머신러닝 예측 모델", tools: "Scikit-learn", result: "인구 통계 데이터를 활용한 거주지별 복지 수요 예측 알고리즘", color: "#8338ec", glow: "rgba(131, 56, 236, 0.4)" },
-            { id: 8, title: "챗봇 UI/UX 설계", tools: "Figma", result: "민원 상담 효율화를 위한 차세대 행정 비서 인터페이스 프로토타입", color: "#38b000", glow: "rgba(56, 176, 0, 0.4)" },
-            { id: 9, title: "자동화 워크플로우", tools: "Make", result: "반복적인 행정 업무 프로세스를 AI 에이전트로 자동화하여 효율성 증대", color: "#00bbf9", glow: "rgba(0, 187, 249, 0.4)" },
-            { id: 10, title: "최종: AI 행정 혁신", tools: "Full Stack", result: "데이터 기반의 스마트 시티 운영 및 데이터 주권 확보 정책 제안서", color: "#ff4d4d", glow: "rgba(255, 77, 77, 0.4)" }
-        ];
+        /* ======== 비디오 모달 제어 로직 ======== */
+        const videoModal = document.getElementById('video-modal');
+        const openVideoBtn = document.getElementById('open-video-btn');
+        const closeVideoBtn = document.getElementById('close-video-btn');
+        const storyVideo = document.getElementById('story-video');
 
-        const grid = document.getElementById('project-grid');
+        // 비디오 모달 열기
+        openVideoBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            videoModal.classList.remove('hidden');
+            setTimeout(() => {
+                videoModal.classList.remove('opacity-0');
+            }, 10);
+            storyVideo.play();
+        });
 
-        projects.forEach((proj, index) => {
-            const card = document.createElement('div');
-            card.className = "project-card p-8 group h-[420px] flex flex-col justify-between cursor-default";
-            card.style.setProperty('--card-color', proj.color);
-            card.style.setProperty('--card-glow', proj.glow);
-            card.setAttribute('data-aos', 'fade-up');
-            card.setAttribute('data-aos-delay', (index % 4) * 100);
-            
-            let actionButtons = '';
-            if (proj.link) {
-                actionButtons = `
-                    <div class="mt-6 flex gap-3">
-                        <button onclick="window.location.href='${proj.link}'" class="btn-action flex-grow">
-                            ${proj.btnText}
-                        </button>
-                        <button onclick="window.location.href='${proj.link}'" class="btn-action w-12 p-0">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                        </button>
-                    </div>
-                `;
-            }
+        // 비디오 모달 닫기
+        const closeVideoModal = () => {
+            videoModal.classList.add('opacity-0');
+            storyVideo.pause(); 
+            storyVideo.currentTime = 0; 
+            setTimeout(() => {
+                videoModal.classList.add('hidden');
+            }, 300);
+        };
 
-            card.innerHTML = `
-                <div class="card-mesh"></div>
-                <div class="relative z-10">
-                    <div class="flex justify-between items-center mb-6">
-                        <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center font-black text-sm transition-all group-hover:bg-white group-hover:text-black group-hover:scale-110" style="color: ${proj.color}">
-                            ${proj.id < 10 ? '0'+proj.id : proj.id}
-                        </div>
-                        <span class="tag-pill" style="background: ${proj.color}; box-shadow: 0 4px 15px ${proj.glow}">${proj.tools}</span>
-                    </div>
-                    <h4 class="text-2xl font-black leading-tight group-hover:translate-x-2 transition-transform duration-500">
-                        ${proj.title}
-                    </h4>
-                </div>
-                
-                <div class="relative z-10">
-                    ${proj.result ? `<p class="text-[13px] opacity-60 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 leading-relaxed line-clamp-4 mb-2">${proj.result}</p>` : ''}
-                    ${actionButtons}
-                    <div class="mt-6 flex items-center text-[10px] font-black tracking-[0.2em] transition-all duration-500 group-hover:tracking-[0.3em]" style="color: ${proj.color}">
-                        ASSIGNMENT VIEW
-                        <div class="ml-4 h-[2px] flex-grow transition-all duration-500 group-hover:h-[4px]" style="background: ${proj.color}; opacity: 0.3;"></div>
-                    </div>
-                </div>
-            `;
-            grid.appendChild(card);
+        closeVideoBtn.addEventListener('click', closeVideoModal);
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) closeVideoModal();
+        });
+
+
+        /* ======== PDF 모달 제어 로직 ======== */
+        const pdfModal = document.getElementById('pdf-modal');
+        const openPdfBtn = document.getElementById('open-pdf-btn');
+        const closePdfBtn = document.getElementById('close-pdf-btn');
+
+        // PDF 모달 열기
+        openPdfBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            pdfModal.classList.remove('hidden');
+            setTimeout(() => {
+                pdfModal.classList.remove('opacity-0');
+            }, 10);
+        });
+
+        // PDF 모달 닫기
+        const closePdfModal = () => {
+            pdfModal.classList.add('opacity-0');
+            setTimeout(() => {
+                pdfModal.classList.add('hidden');
+            }, 300);
+        };
+
+        closePdfBtn.addEventListener('click', closePdfModal);
+        pdfModal.addEventListener('click', (e) => {
+            if (e.target === pdfModal) closePdfModal();
         });
     </script>
 </body>
