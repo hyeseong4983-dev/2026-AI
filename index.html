@@ -29,7 +29,7 @@
             transition: background-color 0.5s ease, color 0.5s ease;
         }
 
-        /* Animated Background */
+        /* 배경 애니메이션 */
         .bg-gradient-animate {
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
@@ -56,7 +56,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Colorful & Modern Card Styles */
+        /* 카드 스타일 */
         .project-card {
             position: relative;
             overflow: hidden;
@@ -104,11 +104,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .custom-scroll::-webkit-scrollbar { width: 8px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #00d2ff; }
-
         .tag-pill {
             padding: 5px 14px;
             border-radius: 100px;
@@ -122,11 +117,7 @@
             transition: transform 0.3s ease;
         }
 
-        .project-card:hover .tag-pill {
-            transform: scale(1.1);
-        }
-
-        /* Action Buttons Style */
+        /* 액션 버튼 스타일 */
         .btn-action {
             display: flex;
             align-items: center;
@@ -149,13 +140,18 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 20px -5px var(--card-glow);
         }
+
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #00d2ff; }
     </style>
 </head>
 <body class="custom-scroll dark:bg-dark dark:text-white light:bg-white light:text-slate-900 overflow-x-hidden">
 
     <div class="bg-gradient-animate"></div>
 
-    <!-- Navigation -->
+    <!-- 내비게이션 바 -->
     <nav class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-white/10 dark:bg-black/20 backdrop-blur-md border-b border-white/5">
         <div class="text-xl font-black tracking-tighter italic">AI LITERACY</div>
         <div class="flex items-center space-x-8">
@@ -175,7 +171,7 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero 섹션 -->
     <section id="hero" class="min-h-screen flex flex-col justify-center items-center px-4 pt-20">
         <div class="text-center" data-aos="fade-up" data-aos-duration="1500">
             <h2 class="text-sm font-bold tracking-[0.6em] text-cyan-500 dark:text-cyan-400 mb-6 uppercase">Future of Public Policy</h2>
@@ -190,7 +186,7 @@
         </div>
     </section>
 
-    <!-- Portfolio Grid -->
+    <!-- 과제 그리드 섹션 -->
     <section id="portfolio" class="max-w-7xl mx-auto px-6 py-32">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
             <div data-aos="fade-right">
@@ -203,11 +199,11 @@
         </div>
 
         <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <!-- Cards Injected via Script -->
+            <!-- 자바스크립트로 카드가 삽입됩니다 -->
         </div>
     </section>
 
-    <!-- About Section -->
+    <!-- 자기소개 섹션 -->
     <section id="about" class="py-40 bg-slate-500/5 dark:bg-white/5 backdrop-blur-xl border-y border-white/5">
         <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
             <div class="relative group" data-aos="fade-right">
@@ -254,16 +250,16 @@
             }
         });
 
-        // 사용자가 요청했던 핵심 내용이 모두 반영된 데이터
+        // 프로젝트 데이터 구성 (3번 카드 링크 ./04/index.html 확인)
         const projects = [
             { 
                 id: 1, 
                 title: "AI의 이해", 
                 tools: "NotebookLM", 
-                result: "구글 노트북LM을 활용하여 AI의 정의부터 70년 역사적 흐름(태동기-황금기-암흑기) 및 생성형 AI의 핵심 구조를 정리하고 행정 혁신의 청사진을 도출하는 실습 수행", 
+                result: "구글 노트북LM을 활용하여 AI의 정의부터 70년 역사적 흐름 및 생성형 AI의 핵심 구조를 정리하고 행정 혁신의 청사진을 도출하는 실습 수행", 
                 color: "#00d2ff", 
                 glow: "rgba(0, 210, 255, 0.4)",
-                link: "./02/index.html",
+                link: "https://notebooklm.google.com/notebook/8fcaec0e-5175-40dc-b538-99de0a10faec",
                 btnText: "결과물 보기",
                 showPlusBtn: true
             },
@@ -271,14 +267,24 @@
                 id: 2, 
                 title: "데이터 스토리텔링", 
                 tools: "Gemini 스토리텔링", 
-                result: "", // 텍스트 삭제 요청 반영
+                result: "", 
                 color: "#9d50bb", 
                 glow: "rgba(157, 80, 187, 0.4)",
                 link: "./03/index.html",
                 btnText: "결과보기",
                 showPlusBtn: false
             },
-            { id: 3, title: "파이썬 데이터 시각화", tools: "Python", result: "공공 데이터를 활용한 지역별 행정 서비스 만족도 분석 및 인포그래픽", color: "#3a86ff", glow: "rgba(58, 134, 255, 0.4)" },
+            { 
+                id: 3, 
+                title: "웹기술의 이해", 
+                tools: "Python", 
+                result: "", 
+                color: "#3a86ff", 
+                glow: "rgba(58, 134, 255, 0.4)",
+                link: "./04/index.html", // 이 경로로 이동합니다.
+                btnText: "결과보기",
+                showPlusBtn: false
+            },
             { id: 4, title: "생성형 AI 이미지 분석", tools: "DALL-E 3", result: "미래 도시 계획 시뮬레이션을 위한 조감도 생성 및 AI 비주얼 리서치", color: "#ff006e", glow: "rgba(255, 0, 110, 0.4)" },
             { id: 5, title: "데이터 크롤링 실습", tools: "Selenium", result: "국내외 주요 정책 관련 뉴스 실시간 크롤링 및 감성 분석 대시보드", color: "#fb5607", glow: "rgba(251, 86, 7, 0.4)" },
             { id: 6, title: "AI 윤리와 사회적 영향", tools: "Research", result: "알고리즘 편향성이 공공 행정 결정에 미치는 위험 요인 심층 분석", color: "#ffbe0b", glow: "rgba(255, 190, 11, 0.4)" },
@@ -301,14 +307,16 @@
             let actionButtons = '';
             if (proj.link) {
                 let plusButtonHtml = proj.showPlusBtn ? `
-                    <button onclick="window.location.href='${proj.link}'" class="btn-action w-12 p-0">
+                    <button onclick="window.open('${proj.link}', '_blank')" class="btn-action w-12 p-0">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     </button>
                 ` : '';
 
+                const clickAction = proj.link.startsWith('http') ? `window.open('${proj.link}', '_blank')` : `window.location.href='${proj.link}'`;
+
                 actionButtons = `
                     <div class="mt-6 flex gap-3 animate-in fade-in slide-in-from-bottom-2 duration-700">
-                        <button onclick="window.location.href='${proj.link}'" class="btn-action flex-grow">
+                        <button onclick="${clickAction}" class="btn-action flex-grow">
                             ${proj.btnText}
                         </button>
                         ${plusButtonHtml}
