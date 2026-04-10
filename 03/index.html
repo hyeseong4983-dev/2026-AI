@@ -6,12 +6,7 @@
     <title>부산광역시 인구 구조 및 고령화 심층 분석 (2020-2024)</title>
     <!--
     Palette: Vibrant Blue & Alert Orange (Primary: #1E3A8A, Accent: #F97316, Danger: #EF4444, Success: #10B981)
-    Plan: 1. Header with Navigation -> 2. Hook (KPIs) -> 3. Overall Trend (Line Chart) -> 4. Regional Disparity (Growth Bar Chart) -> 5. Aging Crisis (Ratio Bar Chart) -> 6. Insights & Strategy.
-    Chart Choices:
-    - Trend (Total vs 60+ Pop): Line Chart - Best for temporal changes. Configured for Canvas. NO SVG.
-    - Growth Comparison: Bar Chart - Best for comparing categorical values. Configured for Canvas. NO SVG.
-    - Aging Ratio: Horizontal Bar Chart - Best for ranking categories. Configured for Canvas. NO SVG.
-    Confirmation: NEITHER Mermaid JS NOR SVG were used anywhere in the output.
+    Update: Added Storybook link and Video Popup Modal.
     -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -21,24 +16,63 @@
         .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 40vh; max-height: 400px; }
         @media (min-width: 768px) { .chart-container { height: 350px; } }
         .card-hover:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; }
+        
+        /* Modal Style */
+        #videoModal {
+            display: none;
+            backdrop-filter: blur(8px);
+        }
+        #videoModal.active {
+            display: flex;
+        }
     </style>
 </head>
 <body class="antialiased pb-20">
 
     <header class="bg-[#1E3A8A] text-white py-10 px-4 shadow-lg mb-10 relative">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between">
-            <div>
+        <div class="max-w-6xl mx-auto flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div class="mb-6 lg:mb-0">
                 <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">부산광역시 인구 구조 및 고령화 리포트</h1>
                 <p class="text-xl text-blue-200 font-light">2020년 - 2024년 시군구별 심층 데이터 분석</p>
             </div>
-            <div class="mt-6 md:mt-0">
-                <a href="../index.html" class="inline-flex items-center px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/30 rounded-full transition-colors duration-200 backdrop-blur-sm group">
+            
+            <div class="flex flex-wrap gap-3 items-center">
+                <!-- Video View Button -->
+                <button onclick="openVideo()" class="inline-flex items-center px-5 py-3 bg-red-600 hover:bg-red-700 border border-white/20 rounded-full transition-all duration-200 shadow-lg group">
+                    <span class="mr-2 text-xl group-hover:scale-110 transition-transform duration-200">🎬</span>
+                    <span class="font-semibold">영상보기</span>
+                </button>
+
+                <!-- Storybook Button -->
+                <a href="https://gemini.google.com/share/a1eb4b8f7bbe" target="_blank" class="inline-flex items-center px-5 py-3 bg-white/10 hover:bg-white/20 border border-white/30 rounded-full transition-all duration-200 backdrop-blur-sm group">
+                    <span class="mr-2 text-xl group-hover:scale-110 transition-transform duration-200">📖</span>
+                    <span class="font-semibold">스토리북</span>
+                </a>
+
+                <!-- Home Button -->
+                <a href="../index.html" class="inline-flex items-center px-5 py-3 bg-white/10 hover:bg-white/20 border border-white/30 rounded-full transition-all duration-200 backdrop-blur-sm group">
                     <span class="mr-2 text-xl group-hover:scale-110 transition-transform duration-200">🏠</span>
                     <span class="font-semibold">홈으로 이동</span>
                 </a>
             </div>
         </div>
     </header>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="fixed inset-0 z-50 items-center justify-center bg-black/80 p-4">
+        <div class="relative w-full max-w-4xl bg-black rounded-2xl overflow-hidden shadow-2xl">
+            <button onclick="closeVideo()" class="absolute top-4 right-4 text-white hover:text-red-500 text-4xl z-10 transition-colors">&times;</button>
+            <div class="aspect-video w-full flex items-center justify-center bg-gray-900">
+                <video id="mainVideo" controls class="w-full h-full">
+                    <source src="sunomv.mp4" type="video/mp4">
+                    브라우저가 비디오 재생을 지원하지 않습니다.
+                </video>
+            </div>
+            <div class="p-4 bg-gray-900 text-white text-center">
+                <p class="text-sm font-medium">부산광역시 인구 통계 요약 영상</p>
+            </div>
+        </div>
+    </div>
 
     <main class="max-w-6xl mx-auto px-4 space-y-12">
 
@@ -125,6 +159,26 @@
     </footer>
 
     <script>
+        // Modal Control
+        const videoModal = document.getElementById('videoModal');
+        const mainVideo = document.getElementById('mainVideo');
+
+        function openVideo() {
+            videoModal.classList.add('active');
+            mainVideo.play();
+        }
+
+        function closeVideo() {
+            videoModal.classList.remove('active');
+            mainVideo.pause();
+            mainVideo.currentTime = 0;
+        }
+
+        // Close modal when clicking outside of the video container
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) closeVideo();
+        });
+
         const wrapLabels = (labels) => {
             return labels.map(label => {
                 if (label.length > 16) {
