@@ -250,7 +250,7 @@
             }
         });
 
-        // 프로젝트 데이터 구성 (3번 카드 링크 ./04/index.html 확인)
+        // 프로젝트 데이터 구성
         const projects = [
             { 
                 id: 1, 
@@ -259,9 +259,9 @@
                 result: "구글 노트북LM을 활용하여 AI의 정의부터 70년 역사적 흐름 및 생성형 AI의 핵심 구조를 정리하고 행정 혁신의 청사진을 도출하는 실습 수행", 
                 color: "#00d2ff", 
                 glow: "rgba(0, 210, 255, 0.4)",
-                link: "https://notebooklm.google.com/notebook/8fcaec0e-5175-40dc-b538-99de0a10faec",
+                link: "./02/index.html", // 요청된 경로로 수정
                 btnText: "결과물 보기",
-                showPlusBtn: true
+                showPlusBtn: true // '+' 버튼 활성화
             },
             { 
                 id: 2, 
@@ -281,7 +281,7 @@
                 result: "", 
                 color: "#3a86ff", 
                 glow: "rgba(58, 134, 255, 0.4)",
-                link: "./04/index.html", // 이 경로로 이동합니다.
+                link: "./04/index.html",
                 btnText: "결과보기",
                 showPlusBtn: false
             },
@@ -306,13 +306,14 @@
             
             let actionButtons = '';
             if (proj.link) {
+                // 외부 주소인 경우 window.open 사용, 내부 경로인 경우 window.location 사용
+                const clickAction = proj.link.startsWith('http') ? `window.open('${proj.link}', '_blank')` : `window.location.href='${proj.link}'`;
+
                 let plusButtonHtml = proj.showPlusBtn ? `
-                    <button onclick="window.open('${proj.link}', '_blank')" class="btn-action w-12 p-0">
+                    <button onclick="${clickAction}" class="btn-action w-12 p-0">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     </button>
                 ` : '';
-
-                const clickAction = proj.link.startsWith('http') ? `window.open('${proj.link}', '_blank')` : `window.location.href='${proj.link}'`;
 
                 actionButtons = `
                     <div class="mt-6 flex gap-3 animate-in fade-in slide-in-from-bottom-2 duration-700">
