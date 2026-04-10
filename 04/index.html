@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>웹 기술의 건축학</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Pretendard', sans-serif;
+            transition: background-color 0.5s ease;
+        }
+
+        .building-part {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .no-css .styled-element {
+            all: unset !important;
+            display: block !important;
+            margin-bottom: 10px !important;
+            color: black !important;
+            background: none !important;
+            border: none !important;
+            font-family: serif !important;
+        }
+
+        .no-js .interactive-element {
+            cursor: not-allowed !important;
+            opacity: 0.6;
+            filter: grayscale(1);
+        }
+
+        .card-glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .animate-soft {
+            animation: pulse-soft 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <!-- Home Button -->
+                <a href="../index.html" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-100 text-slate-600 transition-colors" title="홈으로 이동">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </a>
+                <h1 class="text-2xl font-800 tracking-tight text-blue-600">WEB ARCHITECTURE</h1>
+            </div>
+            <nav class="hidden md:flex space-x-6 font-semibold text-sm">
+                <a href="#html-section" class="hover:text-blue-500 transition">HTML</a>
+                <a href="#css-section" class="hover:text-blue-500 transition">CSS</a>
+                <a href="#js-section" class="hover:text-blue-500 transition">JavaScript</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-12">
+        <!-- Hero Section -->
+        <section class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-800 mb-6 leading-tight">
+                웹사이트를 짓는 과정은<br><span class="text-blue-600">하나의 '건축'</span>과 같습니다.
+            </h2>
+            <p class="text-slate-600 text-lg max-w-2xl mx-auto mb-10">
+                HTML로 뼈대를 세우고, CSS로 디자인을 입히며, JavaScript로 시스템을 가동합니다. 
+                아래에서 제공하는 학습 자료들을 통해 프론트엔드 핵심 기술을 마스터하세요.
+            </p>
+            
+            <!-- Information & Action Buttons -->
+            <div class="flex flex-wrap justify-center gap-4">
+                <!-- Infographic Button -->
+                <a href="#" class="bg-indigo-600 text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg>
+                    인포그래픽
+                </a>
+                <!-- Slide Material Button -->
+                <a href="#" class="bg-emerald-600 text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="14" x="3" y="5" rx="2"/><path d="M7 10h10"/><path d="M7 14h5"/></svg>
+                    슬라이드 자료
+                </a>
+                <!-- Video Button -->
+                <a href="https://www.youtube.com/results?search_query=frontend+development+basics" target="_blank" class="bg-white border-2 border-slate-200 text-slate-700 px-8 py-3 rounded-full font-bold hover:bg-slate-50 transition flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="text-red-500"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    학습 영상 보기
+                </a>
+            </div>
+        </section>
+
+        <!-- Interactive Simulator -->
+        <section id="simulator" class="bg-white rounded-3xl p-8 mb-20 shadow-xl border border-slate-100 overflow-hidden">
+            <div class="flex flex-col lg:flex-row gap-12 items-center">
+                <!-- Visual Building -->
+                <div class="w-full lg:w-1/2 flex flex-col items-center">
+                    <div id="building-display" class="relative w-64 h-64 flex items-center justify-center bg-slate-50 rounded-2xl p-8 border-2 border-dashed border-slate-200">
+                        <!-- HTML Skeleton (Always visible if HTML is on) -->
+                        <svg id="svg-html" class="building-part absolute w-48 h-48 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M3 21V3h18v18H3zM3 9h18M9 21V9" />
+                        </svg>
+                        
+                        <!-- CSS Design -->
+                        <svg id="svg-css" class="building-part absolute w-48 h-48 text-blue-500 opacity-0 transform scale-90" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 21V3h18v18H3zM3 9h18M9 21V9" opacity="0.2" />
+                            <path d="M12 3l9 6v12H3V9l9-6z" />
+                        </svg>
+
+                        <!-- JS Interaction (Glow/Lights) -->
+                        <div id="js-lights" class="building-part absolute w-full h-full opacity-0 pointer-events-none">
+                            <div class="absolute top-1/4 left-1/4 w-4 h-4 bg-yellow-400 rounded-full blur-sm animate-pulse"></div>
+                            <div class="absolute bottom-1/3 right-1/4 w-3 h-3 bg-yellow-300 rounded-full blur-sm animate-pulse"></div>
+                        </div>
+
+                        <div id="empty-state" class="text-slate-400 text-sm italic hidden">뼈대가 없습니다 (Empty)</div>
+                    </div>
+                    <div class="mt-6 text-center">
+                        <p id="status-text" class="font-bold text-slate-500 tracking-widest uppercase text-xs">Waiting for setup...</p>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="w-full lg:w-1/2 space-y-6">
+                    <h3 class="text-xl font-bold mb-4 text-slate-700">체험형 웹 구조 대조기</h3>
+                    
+                    <!-- HTML Switch -->
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition cursor-pointer" onclick="toggleTech('html')">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center font-bold">H</div>
+                            <div>
+                                <h4 class="font-bold text-slate-800">HTML (뼈대)</h4>
+                                <p class="text-xs text-slate-500">구조와 콘텐츠 정의</p>
+                            </div>
+                        </div>
+                        <input type="checkbox" id="check-html" checked class="w-5 h-5 accent-orange-500">
+                    </div>
+
+                    <!-- CSS Switch -->
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition cursor-pointer" onclick="toggleTech('css')">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold">C</div>
+                            <div>
+                                <h4 class="font-bold text-slate-800">CSS (인테리어)</h4>
+                                <p class="text-xs text-slate-500">스타일 및 레이아웃 적용</p>
+                            </div>
+                        </div>
+                        <input type="checkbox" id="check-css" class="w-5 h-5 accent-blue-500">
+                    </div>
+
+                    <!-- JS Switch -->
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition cursor-pointer" onclick="toggleTech('js')">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-yellow-100 text-yellow-600 flex items-center justify-center font-bold">J</div>
+                            <div>
+                                <h4 class="font-bold text-slate-800">JavaScript (동력)</h4>
+                                <p class="text-xs text-slate-500">상호작용 및 시스템 가동</p>
+                            </div>
+                        </div>
+                        <input type="checkbox" id="check-js" class="w-5 h-5 accent-yellow-500">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Content Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- HTML Card -->
+            <div id="html-section" class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition card-glow">
+                <div class="text-orange-500 mb-4">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">HTML5</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                    <strong>웹의 뼈대와 구조:</strong> 태그를 사용하여 문서에 의미를 부여하고 전체적인 콘텐츠 구성을 제공합니다. 최신 HTML5는 멀티미디어 통합을 통해 상호작용 플랫폼으로 진화했습니다.
+                </p>
+                <div class="bg-slate-900 rounded-xl p-4 text-xs text-blue-300 font-mono">
+                    &lt;header&gt;<br>
+                    &nbsp;&nbsp;&lt;h1&gt;건물 뼈대&lt;/h1&gt;<br>
+                    &lt;/header&gt;
+                </div>
+            </div>
+
+            <!-- CSS Card -->
+            <div id="css-section" class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition card-glow">
+                <div class="text-blue-500 mb-4">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">CSS3</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                    <strong>웹의 시각적 디자인:</strong> 형태, 스타일링 및 레이아웃을 담당합니다. 그리드와 미디어 쿼리를 통해 모바일과 데스크톱 모두에서 일관된 반응형 디자인을 구현합니다.
+                </p>
+                <div class="bg-slate-900 rounded-xl p-4 text-xs text-green-300 font-mono">
+                    .building {<br>
+                    &nbsp;&nbsp;color: blue;<br>
+                    &nbsp;&nbsp;display: flex;<br>
+                    }
+                </div>
+            </div>
+
+            <!-- JS Card -->
+            <div id="js-section" class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition card-glow">
+                <div class="text-yellow-500 mb-4">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">JavaScript</h3>
+                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                    <strong>웹의 동적 상호작용:</strong> 웹 페이지에 생명력을 불어넣는 언어입니다. DOM 조작을 통해 실시간 반응을 만들며, React/Angular 같은 현대적 프레임워크의 기반이 됩니다.
+                </p>
+                <div class="bg-slate-900 rounded-xl p-4 text-xs text-yellow-300 font-mono">
+                    function lightOn() {<br>
+                    &nbsp;&nbsp;building.active = true;<br>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Summary -->
+        <footer class="mt-24 pt-12 border-t border-slate-200 text-center">
+            <p class="text-slate-500 text-sm mb-4 italic">
+                "HTML로 탄탄한 구조를 기획하고, CSS로 아름다운 디자인을 입히며, JavaScript로 실시간 상호작용을 부여하여 현대의 웹은 완성됩니다."
+            </p>
+            <button id="main-action-btn" class="interactive-element styled-element bg-blue-600 text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition active:scale-95" onclick="showFeedback()">
+                인터랙티브 경험 시작하기
+            </button>
+            <div id="feedback-msg" class="mt-4 text-blue-600 font-bold opacity-0 transition-opacity">
+                JavaScript가 활성화되어 있어 클릭에 반응합니다!
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        const state = {
+            html: true,
+            css: false,
+            js: false
+        };
+
+        function toggleTech(tech) {
+            state[tech] = !state[tech];
+            document.getElementById(`check-${tech}`).checked = state[tech];
+            updateVisuals();
+        }
+
+        function updateVisuals() {
+            const body = document.body;
+            const svgHtml = document.getElementById('svg-html');
+            const svgCss = document.getElementById('svg-css');
+            const jsLights = document.getElementById('js-lights');
+            const emptyState = document.getElementById('empty-state');
+            const statusText = document.getElementById('status-text');
+
+            // HTML Logic
+            if (!state.html) {
+                svgHtml.style.opacity = '0';
+                svgCss.style.opacity = '0';
+                jsLights.style.opacity = '0';
+                emptyState.classList.remove('hidden');
+                statusText.innerText = "No Structure (Empty)";
+                statusText.className = "font-bold text-red-500 tracking-widest uppercase text-xs";
+            } else {
+                svgHtml.style.opacity = '1';
+                emptyState.classList.add('hidden');
+                
+                // CSS Logic
+                if (state.css) {
+                    svgCss.style.opacity = '1';
+                    svgCss.style.transform = 'scale(1)';
+                    body.classList.remove('no-css');
+                } else {
+                    svgCss.style.opacity = '0';
+                    svgCss.style.transform = 'scale(0.9)';
+                    body.classList.add('no-css');
+                }
+
+                // JS Logic
+                if (state.js) {
+                    jsLights.style.opacity = '1';
+                    body.classList.remove('no-js');
+                } else {
+                    jsLights.style.opacity = '0';
+                    body.classList.add('no-js');
+                }
+
+                // Status Update
+                let msg = "STRUCTURE";
+                if(state.css) msg += " + DESIGN";
+                if(state.js) msg += " + INTERACTION";
+                statusText.innerText = msg;
+                statusText.className = "font-bold text-blue-600 tracking-widest uppercase text-xs animate-soft";
+            }
+        }
+
+        function showFeedback() {
+            if (!state.js) {
+                console.log("JS is off - No action");
+                return;
+            }
+            const msg = document.getElementById('feedback-msg');
+            msg.style.opacity = '1';
+            setTimeout(() => {
+                msg.style.opacity = '0';
+            }, 2000);
+        }
+
+        window.onload = () => {
+            updateVisuals();
+        };
+    </script>
+</body>
+</html>
