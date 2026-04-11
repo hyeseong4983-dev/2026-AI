@@ -85,19 +85,6 @@
         <img src="AI_HISTORY.png" alt="AI History Infographic" class="modal-content-img" onclick="event.stopPropagation()">
     </div>
 
-    <!-- Video Modal -->
-    <div id="video-modal" class="modal-overlay" onclick="closeModal('video-modal')">
-        <button class="absolute top-6 right-6 text-white text-4xl hover:text-emerald-400 transition-colors z-[110]">
-            <i class="fas fa-times"></i>
-        </button>
-        <div class="w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-emerald-500/20" onclick="event.stopPropagation()">
-            <video id="ai-video" class="w-full h-full" controls>
-                <source src="AI_01.mp4" type="video/mp4">
-                브라우저가 비디오 재생을 지원하지 않습니다.
-            </video>
-        </div>
-    </div>
-
     <!-- Hero Section -->
     <header class="hero-gradient py-28 px-6 text-center shadow-2xl border-b border-emerald-900/50">
         <div class="relative z-10">
@@ -119,9 +106,10 @@
                 <a href="AI_03_PPT.pdf" download="AI_03_PPT.pdf" class="w-full sm:w-auto px-8 py-4 bg-emerald-900/40 hover:bg-emerald-800/60 text-emerald-300 font-bold rounded-xl border border-emerald-500/30 transition-all active:scale-95 flex items-center justify-center gap-2">
                     <i class="fas fa-file-pdf"></i> 슬라이드 다운로드
                 </a>
-                <button onclick="openVideoModal()" class="w-full sm:w-auto px-8 py-4 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-100 font-bold rounded-xl border border-emerald-400/40 transition-all active:scale-95 flex items-center justify-center gap-2">
+                <!-- 최종 업데이트된 NotebookLM 상세 아티팩트 링크 -->
+                <a href="https://notebooklm.google.com/notebook/61ba0ee8-78dc-421a-a435-1173cff3c846/artifact/b9b9552d-b12e-400b-a785-ecd9fe884dd3" target="_blank" class="w-full sm:w-auto px-8 py-4 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-100 font-bold rounded-xl border border-emerald-400/40 transition-all active:scale-95 flex items-center justify-center gap-2">
                     <i class="fas fa-play-circle"></i> 동영상 보기
-                </button>
+                </a>
             </div>
         </div>
     </header>
@@ -271,27 +259,17 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function openVideoModal() {
-            openModal('video-modal');
-            const video = document.getElementById('ai-video');
-            video.play().catch(err => console.log("Auto-play blocked:", err));
-        }
-
         function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-            document.body.style.overflow = 'auto';
-            
-            if (modalId === 'video-modal') {
-                const video = document.getElementById('ai-video');
-                video.pause();
-                video.currentTime = 0;
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
             }
         }
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal('image-modal');
-                closeModal('video-modal');
             }
         });
 
