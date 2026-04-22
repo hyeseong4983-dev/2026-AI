@@ -136,9 +136,9 @@
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row items-center gap-16">
                 <div class="w-full md:w-1/2 reveal">
-                    <!-- 자기소개서 동영상 버튼 수정: 링크 연결 -->
+                    <!-- 자기소개서 동영상 버튼: 지정된 상세 아티팩트 링크로 수정 -->
                     <div class="mb-6">
-                        <a href="https://notebooklm.google.com/notebook/a714e60b-d330-4d62-b637-7ddfd56043a5" target="_blank" class="inline-flex items-center gap-2 px-5 py-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-full text-blue-600 text-sm font-bold transition-all duration-300 group">
+                        <a href="https://notebooklm.google.com/notebook/a714e60b-d330-4d62-b637-7ddfd56043a5/artifact/65d5d255-7df4-44a4-a9a0-470105014e8e" target="_blank" class="inline-flex items-center gap-2 px-5 py-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-full text-blue-600 text-sm font-bold transition-all duration-300 group">
                             <i class="fa-solid fa-circle-play group-hover:scale-110 transition-transform"></i>
                             자기소개서 동영상
                         </a>
@@ -268,10 +268,16 @@
         <div class="container mx-auto px-6 text-center">
             <div class="flex flex-col md:flex-row items-center justify-center gap-6 mb-16 reveal">
                 <h3 class="text-3xl font-bold">불확실성 시대의 ‘정밀한 사회 안전망’ 구축</h3>
-                <button id="infographic-btn" class="flex items-center gap-2 px-6 py-2.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/50 rounded-full text-cyan-400 text-sm font-bold transition-all duration-300 group">
-                    <i class="fa-solid fa-chart-pie group-hover:rotate-12 transition-transform"></i>
-                    인포그래픽
-                </button>
+                <div class="flex items-center gap-3">
+                    <button id="infographic-btn" class="flex items-center gap-2 px-6 py-2.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/50 rounded-full text-cyan-400 text-sm font-bold transition-all duration-300 group">
+                        <i class="fa-solid fa-chart-pie group-hover:rotate-12 transition-transform"></i>
+                        인포그래픽
+                    </button>
+                    <button id="slides-btn" class="flex items-center gap-2 px-6 py-2.5 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/50 rounded-full text-indigo-400 text-sm font-bold transition-all duration-300 group">
+                        <i class="fa-solid fa-file-powerpoint group-hover:rotate-12 transition-transform"></i>
+                        슬라이드 자료
+                    </button>
+                </div>
             </div>
             
             <div class="grid md:grid-cols-3 gap-12">
@@ -349,84 +355,78 @@
         </div>
     </footer>
 
-    <div id="infographic-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/90 backdrop-blur-sm p-4">
-        <div class="relative max-w-4xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl transition-all transform scale-95 opacity-0" id="modal-content">
+    <div id="media-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/90 backdrop-blur-sm p-4">
+        <div class="relative max-w-5xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl transition-all transform scale-95 opacity-0" id="modal-content">
             <!-- 닫기 버튼 -->
             <button id="close-modal" class="absolute top-4 right-4 w-10 h-10 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-full flex items-center justify-center transition-colors z-10">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <!-- 이미지 영역 -->
-            <div class="p-2">
-                <img src="./행정학과 취업 전망 인포그래픽.png" alt="행정학과 취업 전망 인포그래픽" class="w-full h-auto rounded-2xl" onerror="this.src='https://placehold.co/1200x800/f1f5f9/64748b?text=인포그래픽+파일을+찾을+수+없습니다'">
+            <!-- 미디어 컨텐츠 영역 -->
+            <div id="modal-body" class="p-2 flex justify-center items-center min-h-[300px]">
+                <!-- JS에서 이미지나 PDF가 주입됩니다 -->
             </div>
         </div>
     </div>
 
     <script>
         const infoBtn = document.getElementById('infographic-btn');
-        const modal = document.getElementById('infographic-modal');
+        const slidesBtn = document.getElementById('slides-btn');
+        const modal = document.getElementById('media-modal');
         const modalContent = document.getElementById('modal-content');
+        const modalBody = document.getElementById('modal-body');
         const closeModal = document.getElementById('close-modal');
 
-        // 모달 열기
-        infoBtn.addEventListener('click', () => {
+        // 모달 열기 함수
+        const openMediaModal = (type) => {
+            if (type === 'image') {
+                modalBody.innerHTML = `<img src="./행정학과 취업 전망 인포그래픽.png" alt="인포그래픽" class="w-full h-auto rounded-2xl" onerror="this.src='https://placehold.co/1200x800/f1f5f9/64748b?text=인포그래픽+파일을+찾을+수+없습니다'">`;
+            } else if (type === 'pdf') {
+                modalBody.innerHTML = `<iframe src="./The path of a public administration major.pdf" class="w-full h-[80vh] rounded-2xl" frameborder="0"></iframe>`;
+            }
+
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            // 애니메이션 효과를 위한 지연 실행
             setTimeout(() => {
                 modalContent.classList.remove('scale-95', 'opacity-0');
                 modalContent.classList.add('scale-100', 'opacity-100');
             }, 10);
-            document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
-        });
+            document.body.style.overflow = 'hidden';
+        };
 
-        // 모달 닫기 함수
+        // 이벤트 리스너 연결
+        infoBtn.addEventListener('click', () => openMediaModal('image'));
+        slidesBtn.addEventListener('click', () => openMediaModal('pdf'));
+
         const hideModal = () => {
             modalContent.classList.remove('scale-100', 'opacity-100');
             modalContent.classList.add('scale-95', 'opacity-0');
             setTimeout(() => {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
-                document.body.style.overflow = 'auto'; // 스크롤 복원
+                modalBody.innerHTML = ''; // 컨텐츠 초기화
+                document.body.style.overflow = 'auto';
             }, 300);
         };
 
         closeModal.addEventListener('click', hideModal);
-        
-        // 배경 클릭 시 닫기
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) hideModal();
-        });
-
-        // ESC 키 누를 때 닫기
+        modal.addEventListener('click', (e) => { if (e.target === modal) hideModal(); });
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                hideModal();
-            }
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) hideModal();
         });
 
-        // 스크롤 시 요소 나타나기 애니메이션
-        const observerOptions = {
-            threshold: 0.1
-        };
-
+        const observerOptions = { threshold: 0.1 };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('active');
             });
         }, observerOptions);
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // 네비게이션 스무스 스크롤 보정
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
             });
         });
     </script>
