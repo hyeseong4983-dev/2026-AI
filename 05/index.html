@@ -241,7 +241,14 @@
 
     <section class="py-24 bg-slate-900 text-white">
         <div class="container mx-auto px-6 text-center">
-            <h3 class="text-3xl font-bold mb-16 reveal">불확실성 시대의 ‘정밀한 사회 안전망’ 구축</h3>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6 mb-16 reveal">
+                <h3 class="text-3xl font-bold">불확실성 시대의 ‘정밀한 사회 안전망’ 구축</h3>
+                <button id="infographic-btn" class="flex items-center gap-2 px-6 py-2.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/50 rounded-full text-cyan-400 text-sm font-bold transition-all duration-300 group">
+                    <i class="fa-solid fa-chart-pie group-hover:rotate-12 transition-transform"></i>
+                    인포그래픽
+                </button>
+            </div>
+            
             <div class="grid md:grid-cols-3 gap-12">
                 <!-- 정밀 행정 -->
                 <div class="reveal group">
@@ -317,7 +324,62 @@
         </div>
     </footer>
 
+    <div id="infographic-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/90 backdrop-blur-sm p-4">
+        <div class="relative max-w-4xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl transition-all transform scale-95 opacity-0" id="modal-content">
+            <!-- 닫기 버튼 -->
+            <button id="close-modal" class="absolute top-4 right-4 w-10 h-10 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-full flex items-center justify-center transition-colors z-10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <!-- 이미지 영역 -->
+            <div class="p-2">
+                <img src="./행정학과 취업 전망 인포그래픽.png" alt="행정학과 취업 전망 인포그래픽" class="w-full h-auto rounded-2xl" onerror="this.src='https://placehold.co/1200x800/f1f5f9/64748b?text=인포그래픽+파일을+찾을+수+없습니다'">
+            </div>
+        </div>
+    </div>
+
     <script>
+        const infoBtn = document.getElementById('infographic-btn');
+        const modal = document.getElementById('infographic-modal');
+        const modalContent = document.getElementById('modal-content');
+        const closeModal = document.getElementById('close-modal');
+
+        // 모달 열기
+        infoBtn.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // 애니메이션 효과를 위한 지연 실행
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+        });
+
+        // 모달 닫기 함수
+        const hideModal = () => {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = 'auto'; // 스크롤 복원
+            }, 300);
+        };
+
+        closeModal.addEventListener('click', hideModal);
+        
+        // 배경 클릭 시 닫기
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) hideModal();
+        });
+
+        // ESC 키 누를 때 닫기
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                hideModal();
+            }
+        });
+
         // 스크롤 시 요소 나타나기 애니메이션
         const observerOptions = {
             threshold: 0.1
