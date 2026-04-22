@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전략적 행정 전문가 | 포트폴리오</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8fafc;
+        }
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #1e40af 0%, #0891b2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .line-draw {
+            position: relative;
+        }
+        .line-draw::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #0891b2;
+            transition: width 0.5s ease;
+        }
+        .line-draw:hover::after {
+            width: 100%;
+        }
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <nav class="fixed top-0 w-full z-50 glass-morphism py-4">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <h1 class="text-xl font-extrabold tracking-tight gradient-text">ADMIN STRATEGIST</h1>
+            <div class="hidden md:flex space-x-8 font-medium text-sm">
+                <a href="../index.html" class="text-blue-600 hover:text-blue-800 transition flex items-center font-bold">
+                    <i class="fa-solid fa-house mr-1.5"></i> 홈
+                </a>
+                <a href="#who" class="hover:text-blue-600 transition">Identity</a>
+                <a href="#major" class="hover:text-blue-600 transition">Major</a>
+                <a href="#synergy" class="hover:text-blue-600 transition">Synergy</a>
+                <a href="#vision" class="hover:text-blue-600 transition">Vision</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="h-screen flex items-center justify-center bg-slate-900 text-white relative overflow-hidden">
+        <!-- 배경 시각 요소: 그리드 및 입자 효과 -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20"></div>
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-blue-600/10 via-transparent to-slate-900"></div>
+            <!-- 빛나는 원형 그래픽 -->
+            <div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-blue-500/20 rounded-full blur-[120px] animate-pulse"></div>
+            <div class="absolute top-[20%] -right-[5%] w-[30%] h-[30%] bg-cyan-500/10 rounded-full blur-[100px] animate-pulse" style="animation-delay: 2s;"></div>
+        </div>
+
+        <div class="container mx-auto px-6 text-center z-10">
+            <!-- 메인 슬로건 및 타이틀 -->
+            <div class="inline-block px-4 py-1.5 mb-6 border border-cyan-500/30 rounded-full bg-cyan-500/10 opacity-0 animate-[fadeIn_1s_ease-out_forwards]">
+                <span class="text-cyan-400 text-sm font-bold tracking-[0.2em] uppercase">Data-Driven Administration</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-8xl font-extrabold mb-8 leading-tight tracking-tighter opacity-0 animate-[fadeIn_1s_ease-out_0.3s_forwards]">
+                행정의 가치를<br>
+                <span class="gradient-text">데이터로 설계하다</span>
+            </h1>
+            
+            <p class="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed opacity-0 animate-[fadeIn_1s_ease-out_0.6s_forwards]">
+                법치(Rule of Law)의 원칙 위에 과학(Data Science)의 정밀함을 더해<br class="hidden md:block"> 
+                시민의 더 나은 일상을 실현하는 행정 전문가를 꿈꿉니다.
+            </p>
+
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 opacity-0 animate-[fadeIn_1s_ease-out_0.9s_forwards]">
+                <a href="#who" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-2xl font-bold transition duration-300 transform hover:-translate-y-1 shadow-lg shadow-blue-900/20">
+                    스토리 시작하기
+                </a>
+                <a href="#vision" class="w-full md:w-auto bg-slate-800/50 hover:bg-slate-800 text-white border border-slate-700 px-10 py-4 rounded-2xl font-bold transition duration-300 transform hover:-translate-y-1">
+                    비전 확인하기
+                </a>
+            </div>
+        </div>
+
+        <!-- 하단 마우스 휠 안내 -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+            <span class="text-[10px] tracking-[0.3em] uppercase">Scroll Down</span>
+            <div class="w-px h-12 bg-gradient-to-b from-cyan-500 to-transparent"></div>
+        </div>
+    </section>
+
+    <section id="who" class="py-24 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center gap-16">
+                <div class="w-full md:w-1/2 reveal">
+                    <h2 class="text-3xl font-bold mb-6 flex items-center">
+                        <span class="w-8 h-1 bg-blue-600 mr-4"></span>
+                        나는 어떤 사람인가?
+                    </h2>
+                    <h3 class="text-4xl font-extrabold mb-8 text-slate-900 leading-snug">
+                        회복 탄력성을 가진<br>'완수형' 전략가
+                    </h3>
+                    <p class="text-slate-600 leading-relaxed mb-8">
+                        방황을 성장의 자산으로 바꾸고, 불가능해 보이는 거리를 성실함의 증거로 바꿨습니다. 저는 정해진 길을 걷기보다, 목표를 향한 가장 확실한 경로를 설계하고 끝내 완수해내는 사람입니다.
+                    </p>
+                </div>
+                <div class="w-full md:w-1/2 grid grid-cols-1 gap-6 reveal">
+                    <div class="step-card bg-slate-50 p-6 rounded-2xl border-l-4 border-blue-600 transition">
+                        <h4 class="font-bold text-lg mb-2 text-blue-700">책임감의 증명</h4>
+                        <p class="text-sm text-slate-600">학사경고의 위기를 회피하지 않고, 전략적 재수강을 통해 성적을 완벽히 복구해내며 <strong>'결과로 증명하는 책임감'</strong>을 길렀습니다.</p>
+                    </div>
+                    <div class="step-card bg-slate-50 p-6 rounded-2xl border-l-4 border-cyan-500 transition">
+                        <h4 class="font-bold text-lg mb-2 text-cyan-700">성실의 체화</h4>
+                        <p class="text-sm text-slate-600">4년간 울산-부산 왕복 3시간의 거리를 단 한 번의 지각 없이 통학하며, <strong>'과정의 성실함'</strong>을 인생의 기본값으로 만들었습니다.</p>
+                    </div>
+                    <div class="step-card bg-slate-50 p-6 rounded-2xl border-l-4 border-indigo-500 transition">
+                        <h4 class="font-bold text-lg mb-2 text-indigo-700">신중한 도전가</h4>
+                        <p class="text-sm text-slate-600">변화에는 신중하되, 확신이 서면 <strong>SW 융합트랙</strong>과 같은 낯선 분야에도 과감히 뛰어들어 성과를 내는 '외유내강형' 인재입니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="major" class="py-24 bg-slate-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-blue-600 font-bold mb-2 uppercase tracking-widest text-sm">My Major</h2>
+                <h3 class="text-4xl font-extrabold">공익 실현을 위한 ‘법치’와 ‘과학’의 융합</h3>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- 이론과 실제 -->
+                <div class="bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition reveal">
+                    <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 text-blue-600 text-2xl">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-4">이론과 실제의 가교</h4>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        단순한 행정 이론을 넘어 행정법, 헌법, 민법 등 법치 행정의 기초가 되는 법리적 소양을 깊이 있게 탐구합니다.
+                    </p>
+                </div>
+                <!-- 지역 최적화 -->
+                <div class="bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition reveal" style="transition-delay: 0.2s;">
+                    <div class="w-14 h-14 bg-cyan-100 rounded-2xl flex items-center justify-center mb-6 text-cyan-600 text-2xl">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-4">지역 최적화 설계</h4>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        지리적·지형적 특성을 데이터로 이해하고 자원을 배분하여 시민의 삶의 질을 높이는 <strong>'공공 설계학'</strong>으로서의 행정을 배웁니다.
+                    </p>
+                </div>
+                <!-- 데이터 기반 -->
+                <div class="bg-white p-10 rounded-3xl shadow-sm hover:shadow-xl transition reveal" style="transition-delay: 0.4s;">
+                    <div class="w-14 h-14 bg-indigo-100 rounded-2xl flex items-center justify-center mb-6 text-indigo-600 text-2xl">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-4">과학적 관리</h4>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        GIS와 AI 도구를 활용해 행정 사각지대를 발굴하고, 객관적 지표로 정책의 실효성을 높이는 법을 탐구합니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="synergy" class="py-24 bg-white overflow-hidden">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="w-full lg:w-1/2 relative reveal">
+                    <!-- 가상의 GIS 분석 화면 느낌 -->
+                    <div class="bg-slate-900 rounded-3xl p-4 shadow-2xl relative overflow-hidden group">
+                        <div class="absolute inset-0 opacity-40 bg-[url('https://placehold.co/800x600/1e293b/475569?text=GIS+MAP+DATA')] bg-cover"></div>
+                        <div class="relative z-10 border border-slate-700 rounded-2xl p-8 h-80 flex flex-col justify-end">
+                            <div class="flex space-x-2 mb-4">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <h5 class="text-white text-xl font-bold mb-2 uppercase">Analysis: Busan Medical Blind Spot</h5>
+                            <p class="text-slate-400 text-xs tracking-widest font-mono">LOCATION: BUSAN-PORT / PARAMETER: EQUITY</p>
+                        </div>
+                    </div>
+                    <!-- 장식 요소 -->
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-blue-600 rounded-3xl -z-10 animate-pulse"></div>
+                </div>
+                <div class="w-full lg:w-1/2 reveal">
+                    <h2 class="text-blue-600 font-bold mb-2 tracking-widest text-sm uppercase">Synergy</h2>
+                    <h3 class="text-4xl font-extrabold mb-8">지리적 문해력과<br>디지털 역량의 융합</h3>
+                    <div class="space-y-8">
+                        <div class="flex items-start">
+                            <div class="bg-blue-600 text-white w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center font-bold mr-4">1</div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">경험과 전공의 결합</h4>
+                                <p class="text-slate-600 text-sm italic">"의료 사각지대 도출 경험은 행정학의 가치인 형평성과 효율성을 실천한 사례입니다."</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-blue-600 text-white w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center font-bold mr-4">2</div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">전략적 집요함</h4>
+                                <p class="text-slate-600 text-sm italic">"법학 과목을 전략적으로 섭렵한 집요함은 법치 행정을 수호하는 원동력이 됩니다."</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-blue-600 text-white w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center font-bold mr-4">3</div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">차별화된 무기, SW 융합</h4>
+                                <p class="text-slate-600 text-sm italic">"전통적 행정학에 데이터 사이언스를 접목하여 미래형 공공 서비스를 수행합니다."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-slate-900 text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h3 class="text-3xl font-bold mb-16 reveal">불확실성 시대의 ‘정밀한 사회 안전망’ 구축</h3>
+            <div class="grid md:grid-cols-3 gap-12">
+                <!-- 정밀 행정 -->
+                <div class="reveal group">
+                    <div class="w-20 h-20 mx-auto bg-slate-800 rounded-2xl flex items-center justify-center text-cyan-400 text-4xl mb-6 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-300">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                    </div>
+                    <h5 class="text-xl font-bold mb-4 uppercase tracking-tighter">정밀 행정</h5>
+                    <p class="text-slate-400 text-sm leading-relaxed">시민 개개인의 생활권(15분 도시)에 맞춘<br>데이터 기반의 정밀한 맞춤형 행정 구현</p>
+                </div>
+                <!-- 갈등 조정 (수정된 파트) -->
+                <div class="reveal group" style="transition-delay: 0.2s;">
+                    <div class="w-20 h-20 mx-auto bg-slate-800 rounded-2xl flex items-center justify-center text-cyan-400 text-4xl mb-6 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-300">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <h5 class="text-xl font-bold mb-4 uppercase tracking-tighter">갈등 조정</h5>
+                    <p class="text-slate-400 text-sm leading-relaxed">법적 근거와 데이터라는 객관적 지표로<br>복잡한 이해관계 속 사회적 신뢰와 합의 구축</p>
+                </div>
+                <!-- 지속 가능성 -->
+                <div class="reveal group" style="transition-delay: 0.4s;">
+                    <div class="w-20 h-20 mx-auto bg-slate-800 rounded-2xl flex items-center justify-center text-cyan-400 text-4xl mb-6 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-300">
+                        <i class="fa-solid fa-anchor"></i>
+                    </div>
+                    <h5 class="text-xl font-bold mb-4 uppercase tracking-tighter">지속 가능성</h5>
+                    <p class="text-slate-400 text-sm leading-relaxed">부산과 같은 해양 거점 도시가 글로벌 경쟁력을<br>갖추도록 뒷받침하는 국가 경영의 기초 체력</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="vision" class="py-24 bg-white relative overflow-hidden">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <div class="reveal text-center mb-16">
+                <h2 class="text-blue-600 font-bold mb-2 uppercase tracking-widest text-sm">Final Goal</h2>
+                <h3 class="text-4xl font-extrabold">시민의 삶을 과학적으로 혁신하다</h3>
+            </div>
+            
+            <div class="relative border-l-2 border-slate-200 ml-4 md:ml-0 md:left-1/2 reveal">
+                <!-- 단기 목표 -->
+                <div class="mb-16 relative">
+                    <div class="absolute -left-2.5 top-0 w-5 h-5 bg-blue-600 rounded-full border-4 border-white"></div>
+                    <div class="ml-10 md:ml-0 md:absolute md:-left-[420px] md:top-0 md:w-[400px] md:text-right">
+                        <span class="text-blue-600 font-bold text-sm">SHORT-TERM</span>
+                        <h4 class="text-2xl font-bold mt-1 mb-2">부산시 7급 행정 전문가</h4>
+                        <p class="text-slate-600">법리적 원칙을 준수하며 현장의 문제를 끝까지 해결하는 신뢰받는 공직자</p>
+                    </div>
+                </div>
+                <!-- 중장기 비전 -->
+                <div class="mb-8 relative">
+                    <div class="absolute -left-2.5 top-0 w-5 h-5 bg-cyan-500 rounded-full border-4 border-white"></div>
+                    <div class="ml-10 md:w-[400px] md:ml-10">
+                        <span class="text-cyan-500 font-bold text-sm">LONG-TERM</span>
+                        <h4 class="text-2xl font-bold mt-1 mb-2">‘15분 도시 부산’의 설계자</h4>
+                        <p class="text-slate-600">GIS 분석 역량을 활용해 지형적 특성을 극복하고, 미시적 복지와 거시적 정책을 조화시키는 정책 전문가</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-24 text-center reveal">
+                <div class="inline-block bg-slate-900 text-white px-12 py-8 rounded-3xl shadow-2xl">
+                    <p class="text-xl italic font-light mb-4">"변화를 분석하고, 원칙을 지키며, 결과를 만들어냅니다."</p>
+                    <p class="font-bold text-cyan-400">시민의 내일을 설계하는 데이터 행정 전문가</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 bg-slate-50 border-t border-slate-200">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex justify-center space-x-6 text-slate-400">
+                <a href="#" class="hover:text-blue-600 transition"><i class="fa-solid fa-envelope"></i></a>
+                <a href="#" class="hover:text-blue-600 transition"><i class="fa-solid fa-link"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 스크롤 시 요소 나타나기 애니메이션
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // 네비게이션 스무스 스크롤 보정
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
