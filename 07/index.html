@@ -23,13 +23,29 @@
     background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 }
+.home-btn {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+.home-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
 </style>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans leading-relaxed tracking-wide antialiased">
-<!-- Palette: Vibrant Blue & Alert Red (#1E3A8A, #EF4444, #F59E0B, #10B981). Narrative Plan: Hero Introduction -> Top Dangerous Zones (Bar Chart) -> 5-Year Trend Analysis (Line Chart) -> Surging Risk Zones (Grouped Bar Chart) -> Safest Zones & Conclusion. Chart Choices: Horizontal Bar (Compare totals), Line (Show change over time), Grouped Bar (Compare multi-year surges). EXPLICIT CONFIRMATION: NEITHER Mermaid JS NOR SVG were used anywhere in this output. -->
+<!-- Palette: Vibrant Blue & Alert Red (#1E3A8A, #EF4444, #F59E0B, #10B981). Narrative Plan: Hero -> Top Zones -> 5-Year Trends -> Recent Surges -> Safety Rules. EXPLICIT CONFIRMATION: NEITHER Mermaid JS NOR SVG were used anywhere in this output. -->
 
-<header class="bg-blue-900 text-white py-16 px-4 shadow-xl border-b-4 border-red-500">
-    <div class="max-w-6xl mx-auto text-center">
+<header class="bg-blue-900 text-white pb-16 px-4 shadow-xl border-b-4 border-red-500 relative">
+    <nav class="max-w-7xl mx-auto py-6 flex justify-start">
+        <a href="../index.html" class="home-btn flex items-center gap-2 px-5 py-2 rounded-full text-white font-medium text-sm">
+            <span class="text-lg">&#8962;</span> 홈
+        </a>
+    </nav>
+
+    <div class="max-w-6xl mx-auto text-center mt-4">
         <div class="text-6xl mb-4">&#128663;&#128680;</div>
         <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">민식이법 5년, 부산 스쿨존은 안전한가?</h1>
         <p class="text-xl md:text-2xl text-blue-200 font-light max-w-3xl mx-auto">2020-2024년 부산광역시 구·군별 어린이 보호구역 교통사고 데이터 정밀 분석</p>
@@ -65,7 +81,7 @@
     <section class="glass-card rounded-2xl p-8 lg:p-12 border-t-8 border-amber-500">
         <div class="max-w-3xl mx-auto text-center mb-10">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">&#128200; 감소하는 해운대, 정체된 사하구</h2>
-            <p class="text-lg text-gray-600">같은 1위 지역이라도 추세는 다릅니다. 해운대구는 꾸준한 안전 대책으로 2024년 사고 건수가 1건으로 크게 감소한 반면, 사하구는 5년 내내 매년 3~5건의 사고가 지속적으로 발생하고 있어 고착화된 위험을 보여줍니다. 반면 영도구는 최근 2년 연속 무사고를 달성했습니다.</p>
+            <p class="text-lg text-gray-600">데이터 변화를 보면 해운대구는 꾸준한 감소세를 보이며 2024년 1건으로 최저치를 기록했습니다. 반면 사하구는 매년 사고가 반복되는 양상을 보입니다. 영도구는 최근 2년 연속 무사고를 유지하며 모범적인 지표를 보여줍니다.</p>
         </div>
         <div class="chart-container w-full max-w-5xl mx-auto">
             <canvas id="trendChart"></canvas>
@@ -82,20 +98,17 @@
         <div class="lg:col-span-4 space-y-6 flex flex-col justify-center">
             <div class="bg-amber-50 rounded-2xl p-8 border border-amber-200 shadow-sm h-full">
                 <h4 class="text-xl font-bold text-amber-900 mb-4">강서구 & 수영구의 위험 경고</h4>
-                <p class="text-gray-700 mb-4">누적 건수는 상위권보다 낮지만, 최근 2022년과 2024년에 사고가 집중된 <strong>강서구, 수영구, 동래구</strong>의 패턴에 주목해야 합니다.</p>
+                <p class="text-gray-700 mb-4">최근 데이터에 따르면 강서구와 수영구는 이전 년도에 비해 사고 빈도가 급격히 높아지는 양상을 보입니다.</p>
                 <ul class="space-y-3">
                     <li class="flex items-start">
                         <span class="text-amber-500 mr-2">&#9654;</span>
-                        <span class="text-gray-800"><strong>강서구:</strong> 2021년 0건에서 2022년, 2024년 각각 5건으로 급증.</span>
+                        <span class="text-gray-800"><strong>강서구:</strong> 2024년 5건 발생으로 위험 가속화.</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-amber-500 mr-2">&#9654;</span>
-                        <span class="text-gray-800"><strong>수영구:</strong> 2024년 단 한 해에만 5건 발생.</span>
+                        <span class="text-gray-800"><strong>수영구:</strong> 5년 중 2024년 사고 건수가 가장 높음.</span>
                     </li>
                 </ul>
-                <div class="mt-6 p-4 bg-white rounded-lg border border-gray-100 text-sm text-gray-600">
-                    대단지 아파트 입주 및 학령인구 이동, 복잡한 통학로 구조가 원인으로 지목되며 긴급 점검이 필요합니다.
-                </div>
             </div>
         </div>
     </section>
@@ -103,11 +116,11 @@
     <section class="bg-blue-900 text-white rounded-2xl p-10 text-center shadow-lg">
         <div class="text-5xl mb-4">&#128304;</div>
         <h2 class="text-3xl font-bold mb-4">모두가 지켜야 할 스쿨존의 약속</h2>
-        <p class="text-blue-100 text-lg max-w-2xl mx-auto mb-8">안전 시설물의 확충도 중요하지만, 어린이 보호구역 내에서는 무조건적인 <strong>서행과 일시 정지</strong>라는 운전자의 근본적인 인식 변화가 병행되어야 아이들의 생명을 지킬 수 있습니다.</p>
+        <p class="text-blue-100 text-lg max-w-2xl mx-auto mb-8">안전한 통학 환경은 우리 모두의 노력이 필요합니다.</p>
         <div class="flex flex-wrap justify-center gap-4">
             <div class="bg-blue-800 px-6 py-3 rounded-full font-semibold border border-blue-700">시속 30km 이하 서행</div>
-            <div class="bg-blue-800 px-6 py-3 rounded-full font-semibold border border-blue-700">횡단보도 앞 무조건 일시정지</div>
-            <div class="bg-blue-800 px-6 py-3 rounded-full font-semibold border border-blue-700">불법 주정차 절대 금지</div>
+            <div class="bg-blue-800 px-6 py-3 rounded-full font-semibold border border-blue-700">횡단보도 앞 일시정지</div>
+            <div class="bg-blue-800 px-6 py-3 rounded-full font-semibold border border-blue-700">불법 주정차 금지</div>
         </div>
     </section>
 </main>
@@ -162,15 +175,7 @@ new Chart(ctxRanking, {
         datasets: [{
             label: '사고 건수',
             data: [19, 19, 18, 18, 16, 15, 14],
-            backgroundColor: [
-                '#EF4444', 
-                '#EF4444', 
-                '#F59E0B', 
-                '#F59E0B', 
-                '#3B82F6', 
-                '#60A5FA', 
-                '#93C5FD'  
-            ],
+            backgroundColor: ['#EF4444', '#EF4444', '#F59E0B', '#F59E0B', '#3B82F6', '#60A5FA', '#93C5FD'],
             borderRadius: 6,
             borderWidth: 0
         }]
@@ -190,7 +195,7 @@ new Chart(ctxRanking, {
 });
 
 const ctxTrend = document.getElementById('trendChart').getContext('2d');
-const labelsTrendRaw = ['2020년도 사고 건수 분석', '2021년도 사고 건수 분석', '2022년도 사고 건수 분석', '2023년도 사고 건수 분석', '2024년도 사고 건수 분석'];
+const labelsTrendRaw = ['2020년도 사고 분석', '2021년도 사고 분석', '2022년도 사고 분석', '2023년도 사고 분석', '2024년도 사고 분석'];
 const labelsTrend = labelsTrendRaw.map(wrapLabel);
 
 new Chart(ctxTrend, {
@@ -199,35 +204,32 @@ new Chart(ctxTrend, {
         labels: labelsTrend,
         datasets: [
             {
-                label: '해운대구 (감소세)',
+                label: '해운대구',
                 data: [6, 4, 5, 3, 1],
                 borderColor: '#10B981',
                 backgroundColor: 'rgba(16, 185, 129, 0.2)',
                 borderWidth: 4,
                 tension: 0.3,
-                pointRadius: 6,
-                pointBackgroundColor: '#10B981'
+                pointRadius: 6
             },
             {
-                label: '사하구 (고착화)',
+                label: '사하구',
                 data: [5, 3, 4, 3, 4],
                 borderColor: '#EF4444',
                 backgroundColor: 'rgba(239, 68, 68, 0.2)',
                 borderWidth: 4,
                 tension: 0.3,
-                pointRadius: 6,
-                pointBackgroundColor: '#EF4444'
+                pointRadius: 6
             },
             {
-                label: '영도구 (개선 완료)',
+                label: '영도구',
                 data: [4, 2, 1, 0, 0],
                 borderColor: '#3B82F6',
                 backgroundColor: 'rgba(59, 130, 246, 0.2)',
                 borderWidth: 4,
                 borderDash: [5, 5],
                 tension: 0.3,
-                pointRadius: 6,
-                pointBackgroundColor: '#3B82F6'
+                pointRadius: 6
             }
         ]
     },
@@ -235,17 +237,17 @@ new Chart(ctxTrend, {
         maintainAspectRatio: false,
         plugins: {
             tooltip: commonTooltipConfig,
-            legend: { position: 'top', labels: { padding: 20, font: { size: 14 } } }
+            legend: { position: 'top' }
         },
         scales: {
-            y: { beginAtZero: true, max: 7, ticks: { stepSize: 1 }, grid: { color: '#E5E7EB' } },
+            y: { beginAtZero: true, max: 7, ticks: { stepSize: 1 } },
             x: { grid: { display: false } }
         }
     }
 });
 
 const ctxSurge = document.getElementById('surgeChart').getContext('2d');
-const labelsSurgeRaw = ['2020년도 지역구 수치', '2021년도 지역구 수치', '2022년도 지역구 수치', '2023년도 지역구 수치', '2024년도 지역구 수치'];
+const labelsSurgeRaw = ['2020년 기록', '2021년 기록', '2022년 기록', '2023년 기록', '2024년 기록'];
 const labelsSurge = labelsSurgeRaw.map(wrapLabel);
 
 new Chart(ctxSurge, {
@@ -280,7 +282,7 @@ new Chart(ctxSurge, {
             legend: { position: 'top' }
         },
         scales: {
-            y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: '#E5E7EB' } },
+            y: { beginAtZero: true, ticks: { stepSize: 1 } },
             x: { grid: { display: false } }
         }
     }
