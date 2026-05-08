@@ -34,10 +34,11 @@
     Palette: Vibrant Alert (Red #EF4444, Blue #3B82F6, Slate #0F172A, Amber #F59E0B)
     Plan: 
     1. Hero Section: Introduces the core contrasting narrative (Overall down, Elderly up).
-    2. KPI Cards: Highlights the stark percentage changes between 2020 and 2024.
-    3. Trend Analysis (Line Chart): Visually separates the descending total accidents and ascending elderly accidents.
-    4. Composition Analysis (Stacked Bar & Doughnut): Shows the growing proportion of elderly accidents, culminating in the "1 in 5" stat for 2024.
-    5. Actionable Insights: Displays causes and proposed solutions using styled HTML cards.
+    2. Navigation: Added a "Home" button linking to ../index.html.
+    3. KPI Cards: Highlights the stark percentage changes between 2020 and 2024.
+    4. Trend Analysis (Line Chart): Visually separates the descending total accidents and ascending elderly accidents.
+    5. Composition Analysis (Stacked Bar & Doughnut): Shows the growing proportion of elderly accidents, culminating in the "1 in 5" stat for 2024.
+    6. Actionable Insights: Displays causes and proposed solutions using styled HTML cards.
     Visualization Choices:
     - Diverging Trend -> Goal: Change -> Line Chart (Chart.js) -> Best for comparing dual time-series trends. (NO SVG)
     - Proportion Over Time -> Goal: Composition -> Stacked Bar Chart (Chart.js) -> Shows absolute volumes and relative share simultaneously. (NO SVG)
@@ -45,8 +46,15 @@
     Confirmation: NEITHER Mermaid JS NOR SVG were used anywhere in this output. All icons are standard Unicode.
     -->
 
-    <header class="bg-slate-900 text-white py-12 px-6 shadow-md border-b-4 border-red-500">
+    <header class="bg-slate-900 text-white py-10 px-6 shadow-md border-b-4 border-red-500">
         <div class="max-w-6xl mx-auto">
+            <!-- Home Navigation Button -->
+            <div class="mb-8">
+                <a href="../index.html" class="inline-flex items-center bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold py-2.5 px-5 rounded-lg transition-all shadow-sm border border-slate-700 group">
+                    <span class="mr-2 group-hover:scale-110 transition-transform">🏠</span> 홈
+                </a>
+            </div>
+
             <div class="inline-block bg-red-500 text-white font-bold px-3 py-1 rounded-full text-sm mb-4">
                 2020-2024 교통사고 심층 분석
             </div>
@@ -212,14 +220,19 @@
         const processedLabels = rawLabels.map(wrapLabel);
 
         const commonTooltipConfig = {
-            callbacks: {
-                title: function(tooltipItems) {
-                    const item = tooltipItems[0];
-                    let label = item.chart.data.labels[item.dataIndex];
-                    if (Array.isArray(label)) {
-                        return label.join(' ');
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                                return label.join(' ');
+                            } else {
+                                return label;
+                            }
+                        }
                     }
-                    return label;
                 }
             }
         };
@@ -265,7 +278,7 @@
                 },
                 plugins: {
                     legend: { position: 'top', labels: { font: { family: "'Noto Sans KR', sans-serif" } } },
-                    tooltip: commonTooltipConfig
+                    tooltip: commonTooltipConfig.plugins.tooltip
                 },
                 scales: {
                     x: { ticks: { font: { family: "'Noto Sans KR', sans-serif" } } },
@@ -315,7 +328,7 @@
                 maintainAspectRatio: false,
                 plugins: {
                     legend: { position: 'top', labels: { font: { family: "'Noto Sans KR', sans-serif" } } },
-                    tooltip: commonTooltipConfig
+                    tooltip: commonTooltipConfig.plugins.tooltip
                 },
                 scales: {
                     x: { stacked: true, ticks: { font: { family: "'Noto Sans KR', sans-serif" } } },
@@ -342,7 +355,7 @@
                 cutout: '75%',
                 plugins: {
                     legend: { position: 'bottom', labels: { font: { family: "'Noto Sans KR', sans-serif" } } },
-                    tooltip: commonTooltipConfig
+                    tooltip: commonTooltipConfig.plugins.tooltip
                 }
             }
         });
