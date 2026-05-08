@@ -34,25 +34,25 @@
     Palette: Vibrant Alert (Red #EF4444, Blue #3B82F6, Slate #0F172A, Amber #F59E0B)
     Plan: 
     1. Hero Section: Introduces the core contrasting narrative (Overall down, Elderly up).
-    2. Navigation: Added a "Home" button linking to ../index.html.
+    2. Navigation: Added "Home" and "Article" buttons. "Article" triggers a centered JS popup window.
     3. KPI Cards: Highlights the stark percentage changes between 2020 and 2024.
     4. Trend Analysis (Line Chart): Visually separates the descending total accidents and ascending elderly accidents.
-    5. Composition Analysis (Stacked Bar & Doughnut): Shows the growing proportion of elderly accidents, culminating in the "1 in 5" stat for 2024.
-    6. Actionable Insights: Displays causes and proposed solutions using styled HTML cards.
-    Visualization Choices:
-    - Diverging Trend -> Goal: Change -> Line Chart (Chart.js) -> Best for comparing dual time-series trends. (NO SVG)
-    - Proportion Over Time -> Goal: Composition -> Stacked Bar Chart (Chart.js) -> Shows absolute volumes and relative share simultaneously. (NO SVG)
-    - 2024 Current State -> Goal: Inform -> Doughnut Chart (Chart.js) -> Powerfully highlights the 21.6% ratio. (NO SVG)
+    5. Composition Analysis (Stacked Bar & Doughnut): Shows the growing proportion of elderly accidents.
+    6. Actionable Insights: Displays causes and proposed solutions.
     Confirmation: NEITHER Mermaid JS NOR SVG were used anywhere in this output. All icons are standard Unicode.
     -->
 
     <header class="bg-slate-900 text-white py-10 px-6 shadow-md border-b-4 border-red-500">
         <div class="max-w-6xl mx-auto">
-            <!-- Home Navigation Button -->
-            <div class="mb-8">
+            <!-- Navigation Buttons -->
+            <div class="flex flex-wrap gap-3 mb-8">
                 <a href="../index.html" class="inline-flex items-center bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold py-2.5 px-5 rounded-lg transition-all shadow-sm border border-slate-700 group">
                     <span class="mr-2 group-hover:scale-110 transition-transform">🏠</span> 홈
                 </a>
+                <!-- Updated Article Button to trigger Popup -->
+                <button onclick="openArticlePopup()" class="inline-flex items-center bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-2.5 px-5 rounded-lg transition-all shadow-sm group">
+                    <span class="mr-2 group-hover:scale-110 transition-transform">📄</span> 기사문
+                </button>
             </div>
 
             <div class="inline-block bg-red-500 text-white font-bold px-3 py-1 rounded-full text-sm mb-4">
@@ -194,6 +194,20 @@
     </footer>
 
     <script>
+        // Function to open the Article PDF in a centered popup window
+        function openArticlePopup() {
+            const width = 900;
+            const height = 1000;
+            const left = (window.screen.width / 2) - (width / 2);
+            const top = (window.screen.height / 2) - (height / 2);
+            
+            window.open(
+                './기사문_데이터분석1.pdf', 
+                'ArticlePopup', 
+                `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes`
+            );
+        }
+
         const rawLabels = ['2020년도 교통사고 통계', '2021년도 교통사고 통계', '2022년도 교통사고 통계', '2023년도 교통사고 통계', '2024년도 교통사고 통계'];
         const shortLabels = ['2020년', '2021년', '2022년', '2023년', '2024년'];
         const totalAccidents = [209654, 203130, 196836, 198296, 196349];
