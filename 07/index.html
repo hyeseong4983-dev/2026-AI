@@ -23,26 +23,30 @@
     background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 }
-.home-btn {
+.nav-btn {
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     transition: all 0.3s ease;
 }
-.home-btn:hover {
+.nav-btn:hover {
     background: rgba(255, 255, 255, 0.25);
     transform: translateY(-1px);
 }
 </style>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans leading-relaxed tracking-wide antialiased">
-<!-- Palette: Vibrant Blue & Alert Red (#1E3A8A, #EF4444, #F59E0B, #10B981). Narrative Plan: Hero -> Top Zones -> 5-Year Trends -> Recent Surges -> Safety Rules. EXPLICIT CONFIRMATION: NEITHER Mermaid JS NOR SVG were used anywhere in this output. -->
+<!-- Palette: Vibrant Blue & Alert Red (#1E3A8A, #EF4444, #F59E0B, #10B981). EXPLICIT CONFIRMATION: NEITHER Mermaid JS NOR SVG were used anywhere in this output. -->
 
 <header class="bg-blue-900 text-white pb-16 px-4 shadow-xl border-b-4 border-red-500 relative">
-    <nav class="max-w-7xl mx-auto py-6 flex justify-start">
-        <a href="../index.html" class="home-btn flex items-center gap-2 px-5 py-2 rounded-full text-white font-medium text-sm">
+    <!-- 상단 네비게이션 영역 -->
+    <nav class="max-w-7xl mx-auto py-6 flex justify-start gap-3">
+        <a href="../index.html" class="nav-btn flex items-center gap-2 px-5 py-2 rounded-full text-white font-medium text-sm">
             <span class="text-lg">&#8962;</span> 홈
         </a>
+        <button onclick="window.open('./기사문_데이터분석2.pdf', '_blank', 'width=800,height=900')" class="nav-btn flex items-center gap-2 px-5 py-2 rounded-full text-white font-medium text-sm">
+            <span class="text-lg">&#128196;</span> 기사문
+        </button>
     </nav>
 
     <div class="max-w-6xl mx-auto text-center mt-4">
