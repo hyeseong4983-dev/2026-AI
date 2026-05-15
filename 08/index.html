@@ -1,1 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busan: Neon & Sea - 로컬 라이프스타일 투어</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #020617;
+            color: #f8fafc;
+        }
+        .neon-text {
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.4);
+        }
+        .neon-border {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        section { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        section.visible { opacity: 1; transform: translateY(0); }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
 
+    <!-- Video Modal -->
+    <div id="video-modal" class="modal-overlay" onclick="closeVideoModal()">
+        <div class="relative w-full max-w-4xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl shadow-purple-500/20" onclick="event.stopPropagation()">
+            <button onclick="closeVideoModal()" class="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 p-2 rounded-full transition">
+                <i data-lucide="x" class="text-white"></i>
+            </button>
+            <iframe id="youtube-iframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- PDF Modal -->
+    <div id="pdf-modal" class="modal-overlay" onclick="closePdfModal()">
+        <div class="relative w-full max-w-5xl h-[85vh] bg-slate-900 rounded-2xl overflow-hidden shadow-2xl shadow-blue-500/20" onclick="event.stopPropagation()">
+            <div class="absolute top-0 left-0 w-full p-4 bg-slate-800 flex justify-between items-center border-b border-white/10 z-10">
+                <span class="text-sm font-bold flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4 text-blue-400"></i> 부산 신규 관광 콘텐츠 기획안.pdf</span>
+                <button onclick="closePdfModal()" class="bg-white/10 hover:bg-white/20 p-2 rounded-full transition">
+                    <i data-lucide="x" class="text-white w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="w-full h-full pt-14">
+                <iframe id="pdf-iframe" class="w-full h-full" src="" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image (Word Cloud) Modal -->
+    <div id="image-modal" class="modal-overlay" onclick="closeImageModal()">
+        <div class="relative w-full max-w-4xl max-h-[90vh] bg-slate-900 rounded-2xl overflow-hidden shadow-2xl shadow-pink-500/20 flex flex-col" onclick="event.stopPropagation()">
+            <div class="p-4 bg-slate-800 flex justify-between items-center border-b border-white/10">
+                <span class="text-sm font-bold flex items-center gap-2"><i data-lucide="pie-chart" class="w-4 h-4 text-pink-400"></i> 유튜브 댓글 분석 워드클라우드</span>
+                <button onclick="closeImageModal()" class="bg-white/10 hover:bg-white/20 p-2 rounded-full transition">
+                    <i data-lucide="x" class="text-white w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-auto flex items-center justify-center p-6 bg-white/5">
+                <img id="wordcloud-img" src="" alt="유튜브 댓글 분석 워드클라우드" class="max-w-full max-h-full object-contain">
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 px-6 py-4 flex justify-between items-center glass-card border-none">
+        <div class="flex items-center gap-2">
+            <i data-lucide="waves" class="text-blue-400"></i>
+            <span class="font-black text-xl tracking-tighter italic">BUSAN <span class="text-purple-500">NEON & SEA</span></span>
+        </div>
+        <div class="hidden md:flex items-center gap-8 font-medium text-sm uppercase tracking-widest">
+            <a href="../index.html" class="flex items-center gap-1.5 hover:text-blue-400 transition">
+                <i data-lucide="home" class="w-4 h-4"></i> 홈
+            </a>
+            <a href="#about" class="hover:text-purple-400 transition">About</a>
+            <a href="#programs" class="hover:text-blue-400 transition">Programs</a>
+            <a href="#booking" class="bg-purple-600 px-4 py-2 rounded-full hover:bg-purple-700 transition text-white">Join the Vibe</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen flex items-center justify-center text-center px-4 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-black opacity-60"></div>
+            <div class="w-full h-full gradient-bg"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-5xl">
+            <h2 class="text-blue-400 font-bold tracking-[0.3em] mb-4 uppercase animate-pulse">Experience the Contrast</h2>
+            <h1 class="text-6xl md:text-8xl font-black mb-6 leading-tight">
+                NEON LIGHTS & <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">OCEAN BREEZE</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+                서울과는 다른 거친 세련미. <br class="hidden md:block">
+                초고층 빌딩의 사이버펑크 야경과 로컬 청년들의 뒷골목 바이브를 넘나드는 새로운 부산을 만나보세요.
+            </p>
+            <div class="flex flex-col gap-6 items-center">
+                <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                    <a href="#programs" class="px-8 py-4 bg-white text-black font-bold rounded-full hover:scale-105 transition-transform flex items-center gap-2">
+                        프로그램 둘러보기 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                    <button onclick="playIntro()" class="px-8 py-4 glass-card font-bold rounded-full border border-white/20 hover:bg-white/10 transition flex items-center gap-2 group">
+                        <i data-lucide="play-circle" class="w-5 h-5 group-hover:text-purple-400"></i> 15초 바이브 영상
+                    </button>
+                </div>
+                <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                    <button onclick="openPdf()" class="px-8 py-4 glass-card font-bold rounded-full border border-white/20 hover:bg-white/10 transition flex items-center gap-2 group">
+                        <i data-lucide="file-text" class="w-5 h-5 group-hover:text-blue-400"></i> 기획서 보기
+                    </button>
+                    <!-- 워드클라우드 버튼 추가 -->
+                    <button onclick="openWordCloud()" class="px-8 py-4 glass-card font-bold rounded-full border border-white/20 hover:bg-white/10 transition flex items-center gap-2 group">
+                        <i data-lucide="pie-chart" class="w-5 h-5 group-hover:text-pink-400"></i> 워드클라우드
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <i data-lucide="chevron-down" class="text-slate-500"></i>
+        </div>
+    </header>
+
+    <!-- Insight Section -->
+    <section id="about" class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div>
+                <span class="text-purple-500 font-bold uppercase tracking-widest text-sm">Why Busan Now?</span>
+                <h2 class="text-4xl font-bold mt-4 mb-8">댓글 데이터가 증명하는 <br>진짜 부산의 매력</h2>
+                <div class="space-y-6">
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="trending-up" class="text-blue-400"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-xl">전국 유동인구 1위, 서면 상권</h4>
+                            <p class="text-slate-400 mt-1">저녁 시간 평균 유동인구 12만 명. 부산 로컬 청년들의 실질적인 에너지가 응집된 곳입니다.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="utensils" class="text-purple-400"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-xl">미식의 격세지감</h4>
+                            <p class="text-slate-400 mt-1">회와 어묵을 넘어, 전포 카페거리와 파인 다이닝이 공존하는 새로운 미식 성지로 진화했습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="aspect-square rounded-3xl bg-gradient-to-br from-blue-600 to-purple-600 p-1">
+                    <div class="w-full h-full bg-slate-900 rounded-[1.4rem] flex flex-col items-center justify-center p-8 text-center">
+                        <i data-lucide="users" class="w-16 h-16 text-blue-400 mb-6 animate-float"></i>
+                        <h3 class="text-5xl font-black text-white mb-2">127,065+</h3>
+                        <p class="text-blue-300 font-medium">서면역 저녁 평균 유동인구</p>
+                        <div class="mt-8 pt-8 border-t border-slate-800 w-full text-slate-500 italic text-sm">
+                            "진짜 로컬 청년들이 몰리는 곳은 따로 있습니다" <br>- 유튜브 댓글 중 -
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program Cards Section -->
+    <section id="programs" class="py-24 bg-slate-950 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black mb-4">MAIN PROGRAMS</h2>
+                <p class="text-slate-400">우리가 제안하는 3가지 특별한 부산 경험</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Program 1 -->
+                <div class="glass-card p-8 rounded-3xl hover:translate-y-[-10px] transition group border-t-4 border-t-blue-500">
+                    <div class="mb-6 text-blue-400 group-hover:scale-110 transition-transform origin-left">
+                        <i data-lucide="map-pin" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Jeonpo Alley-Walk</h3>
+                    <p class="text-slate-400 mb-6">과거 공구골목의 거친 질감과 힙한 위스키 바의 만남. 부산 청년들의 진짜 '불금'을 탐험합니다.</p>
+                    <ul class="text-sm space-y-2 mb-8 text-slate-300">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 전포 카페거리 도보 투어</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 하이볼/위스키 테이스팅</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl bg-blue-600/20 text-blue-400 font-bold hover:bg-blue-600 hover:text-white transition">자세히 보기</button>
+                </div>
+
+                <!-- Program 2 -->
+                <div class="glass-card p-8 rounded-3xl hover:translate-y-[-10px] transition group border-t-4 border-t-purple-500">
+                    <div class="mb-6 text-purple-400 group-hover:scale-110 transition-transform origin-left">
+                        <i data-lucide="camera" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Midnight Cyber-Busan</h3>
+                    <p class="text-slate-400 mb-6">해운대 마린시티의 압도적인 스카이라인. 사이버펑크 영화 속 한 장면 같은 야경 포토 투어.</p>
+                    <ul class="text-sm space-y-2 mb-8 text-slate-300">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 스카이라인 전문 포토그래퍼</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 루프탑 드론쇼 프라이빗 뷰</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl bg-purple-600/20 text-purple-400 font-bold hover:bg-purple-700 hover:text-white transition">자세히 보기</button>
+                </div>
+
+                <!-- Program 3 -->
+                <div class="glass-card p-8 rounded-3xl hover:translate-y-[-10px] transition group border-t-4 border-t-pink-500">
+                    <div class="mb-6 text-pink-400 group-hover:scale-110 transition-transform origin-left">
+                        <i data-lucide="soup" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Old & New Foodie</h3>
+                    <p class="text-slate-400 mb-6">30년 노포 돼지국밥부터 미쉐린 가이드급 파인 다이닝까지. 부산 음식의 진화를 맛보는 미식 로드.</p>
+                    <ul class="text-sm space-y-2 mb-8 text-slate-300">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 노포 vs 핫플 비교 투어</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 로컬 식재료 큐레이션</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl bg-pink-600/20 text-pink-400 font-bold hover:bg-pink-600 hover:text-white transition">자세히 보기</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="py-24 px-6 overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-center text-2xl font-bold mb-12 text-slate-500 uppercase tracking-widest">Real Voices</h2>
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="glass-card p-6 rounded-2xl flex-1">
+                    <p class="text-sm italic text-slate-300">"와 예전엔 부산 음식 짜기만 했는데, 이젠 진짜 미식의 도시네요. 격세지감입니다!"</p>
+                    <div class="mt-4 flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-blue-500/50 flex items-center justify-center text-[10px]">T</div>
+                        <span class="text-xs font-bold text-slate-400">@tyto***</span>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl flex-1">
+                    <p class="text-sm italic text-slate-300">"해운대는 관광객, 서면은 진짜 로컬. 부산의 에너지는 서면역 밤거리에서 나옵니다."</p>
+                    <div class="mt-4 flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-purple-500/50 flex items-center justify-center text-[10px]">M</div>
+                        <span class="text-xs font-bold text-slate-400">@mandukim***</span>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl flex-1">
+                    <p class="text-sm italic text-slate-300">"빌딩 숲 바로 앞에 백사장이 있는 풍경은 한국 부산만의 독보적인 바이브예요."</p>
+                    <div class="mt-4 flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-pink-500/50 flex items-center justify-center text-[10px]">E</div>
+                        <span class="text-xs font-bold text-slate-400">@Ekkee***</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking / CTA -->
+    <section id="booking" class="py-24 px-6 relative overflow-hidden">
+        <div class="absolute inset-0 bg-blue-600 opacity-10 blur-3xl"></div>
+        <div class="max-w-3xl mx-auto glass-card p-12 rounded-[3rem] text-center relative z-10 border-blue-500/30">
+            <h2 class="text-4xl font-black mb-6">진짜 부산을 경험할 준비가 되셨나요?</h2>
+            <p class="text-slate-300 mb-10">지금 이메일을 등록하고, 선착순 50명에게 제공되는 '로컬 하이볼 쿠폰'과 시크릿 루트 가이드를 받으세요.</p>
+            <form onsubmit="handleSubmit(event)" class="flex flex-col md:flex-row gap-4">
+                <input type="email" placeholder="yourname@email.com" class="flex-1 bg-slate-800 border border-slate-700 rounded-full px-6 py-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-white" required>
+                <button type="submit" class="bg-blue-600 px-8 py-4 rounded-full font-black hover:bg-blue-700 transition shadow-lg shadow-blue-600/20">GET STARTED</button>
+            </form>
+            <p id="success-msg" class="mt-4 text-green-400 hidden">감사합니다! 곧 가이드북이 발송됩니다.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-slate-900 px-6 text-center text-slate-500 text-sm">
+        <div class="flex justify-center gap-6 mb-6">
+            <a href="#" class="hover:text-white transition"><i data-lucide="instagram"></i></a>
+            <a href="#" class="hover:text-white transition"><i data-lucide="youtube"></i></a>
+            <a href="#" class="hover:text-white transition"><i data-lucide="facebook"></i></a>
+        </div>
+        <p>© 2024 BUSAN NEON & SEA. All Rights Reserved. Based on Local Big Data Analysis.</p>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Scroll animations
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+        // Form Handler
+        function handleSubmit(e) {
+            e.preventDefault();
+            document.getElementById('success-msg').classList.remove('hidden');
+            e.target.reset();
+        }
+
+        // Video Modal Logic
+        const videoModal = document.getElementById('video-modal');
+        const youtubeIframe = document.getElementById('youtube-iframe');
+        const videoId = "Oy5ueaRW2yY";
+
+        function playIntro() {
+            videoModal.classList.add('active');
+            youtubeIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeVideoModal() {
+            videoModal.classList.remove('active');
+            youtubeIframe.src = ""; 
+            document.body.style.overflow = 'auto'; 
+        }
+
+        // PDF Modal Logic
+        const pdfModal = document.getElementById('pdf-modal');
+        const pdfIframe = document.getElementById('pdf-iframe');
+        const pdfPath = "./부산 신규 관광 콘텐츠 기획안.pdf";
+
+        function openPdf() {
+            pdfModal.classList.add('active');
+            pdfIframe.src = pdfPath;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePdfModal() {
+            pdfModal.classList.remove('active');
+            pdfIframe.src = "";
+            document.body.style.overflow = 'auto';
+        }
+
+        // Image (Word Cloud) Modal Logic
+        const imageModal = document.getElementById('image-modal');
+        const wordcloudImg = document.getElementById('wordcloud-img');
+        const imagePath = "./유튜브 댓글분석 워드클라우드.png";
+
+        function openWordCloud() {
+            imageModal.classList.add('active');
+            wordcloudImg.src = imagePath;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            imageModal.classList.remove('active');
+            wordcloudImg.src = "";
+            document.body.style.overflow = 'auto';
+        }
+
+        // Common Keydown Events
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeVideoModal();
+                closePdfModal();
+                closeImageModal();
+            }
+        });
+
+        // Parallax Effect
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            const bg = document.querySelector('.gradient-bg');
+            if(bg) bg.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.1)`;
+        });
+    </script>
+</body>
+</html>
