@@ -143,7 +143,7 @@
                     <button onclick="openPdf()" class="px-8 py-4 glass-card font-bold rounded-full border border-white/20 hover:bg-white/10 transition flex items-center gap-2 group">
                         <i data-lucide="file-text" class="w-5 h-5 group-hover:text-blue-400"></i> 기획서 보기
                     </button>
-                    <!-- 워드클라우드 버튼 추가 -->
+                    <!-- 워드클라우드 버튼 -->
                     <button onclick="openWordCloud()" class="px-8 py-4 glass-card font-bold rounded-full border border-white/20 hover:bg-white/10 transition flex items-center gap-2 group">
                         <i data-lucide="pie-chart" class="w-5 h-5 group-hover:text-pink-400"></i> 워드클라우드
                     </button>
@@ -365,7 +365,8 @@
         // Image (Word Cloud) Modal Logic
         const imageModal = document.getElementById('image-modal');
         const wordcloudImg = document.getElementById('wordcloud-img');
-        const imagePath = "./유튜브 댓글분석 워드클라우드.png";
+        // 파일명을 최신 파일인 "유튜브 워드클라우드 최종.png"로 변경
+        const imagePath = "./유튜브 워드클라우드 최종.png";
 
         function openWordCloud() {
             imageModal.classList.add('active');
