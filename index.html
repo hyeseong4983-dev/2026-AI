@@ -29,6 +29,7 @@
             transition: background-color 0.5s ease, color 0.5s ease;
         }
 
+        /* 배경 그라데이션 애니메이션 */
         .bg-gradient-animate {
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
@@ -55,6 +56,7 @@
             100% { background-position: 0% 50%; }
         }
 
+        /* 프리미엄 카드 디자인 */
         .project-card {
             position: relative;
             overflow: hidden;
@@ -114,6 +116,7 @@
             box-shadow: 0 4px 10px var(--card-glow);
         }
 
+        /* 반응형 액션 버튼 */
         .btn-action {
             display: flex;
             align-items: center;
@@ -146,6 +149,7 @@
 
     <div class="bg-gradient-animate"></div>
 
+    <!-- 내비게이션 바 -->
     <nav class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-white/10 dark:bg-black/20 backdrop-blur-md border-b border-white/5">
         <div class="text-xl font-black tracking-tighter italic">AI LITERACY</div>
         <div class="flex items-center space-x-8">
@@ -165,6 +169,7 @@
         </div>
     </nav>
 
+    <!-- Hero 섹션 -->
     <section id="hero" class="min-h-screen flex flex-col justify-center items-center px-4 pt-20">
         <div class="text-center" data-aos="fade-up" data-aos-duration="1500">
             <h2 class="text-sm font-bold tracking-[0.6em] text-cyan-500 dark:text-cyan-400 mb-6 uppercase">Future of Public Policy</h2>
@@ -179,6 +184,7 @@
         </div>
     </section>
 
+    <!-- 과제 그리드 섹션 -->
     <section id="portfolio" class="max-w-7xl mx-auto px-6 py-32">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
             <div data-aos="fade-right">
@@ -191,10 +197,11 @@
         </div>
 
         <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <!-- Cards Injected via Script -->
+            <!-- 자바스크립트로 카드가 동적 생성됩니다 -->
         </div>
     </section>
 
+    <!-- 자기소개 섹션 -->
     <section id="about" class="py-40 bg-slate-500/5 dark:bg-white/5 backdrop-blur-xl border-y border-white/5">
         <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
             <div class="relative group" data-aos="fade-right">
@@ -241,7 +248,7 @@
             }
         });
 
-        // 프로젝트 데이터 구성 (1~9번 카드 개별 링크 정상화)
+        // 프로젝트 데이터 구성 (9번 카드 웹 링크 반영)
         const projects = [
             { 
                 id: 1, 
@@ -333,13 +340,13 @@
             },
             { 
                 id: 9, 
-                title: "구글 ai 스튜디오 실습", // 제목 변경
+                title: "구글 ai 스튜디오 실습", 
                 tools: "Make", 
-                result: "", // 기존 지문 삭제
+                result: "", 
                 color: "#00bbf9", 
                 glow: "rgba(0, 187, 249, 0.4)",
-                link: "./10/index.html", // 결과보기 버튼 경로 설정
-                btnText: "결과보기",     // 결과보기 버튼 텍스트 설정
+                link: "https://box-office-explorer.vercel.app", // 요청한 배포 웹앱 링크 적용
+                btnText: "결과보기",     
                 showPlusBtn: false
             },
             { id: 10, title: "최종: AI 행정 혁신", tools: "Full Stack", result: "데이터 기반의 스마트 시티 운영 및 데이터 주권 확보 정책 제안서", color: "#ff4d4d", glow: "rgba(255, 77, 77, 0.4)" }
@@ -357,15 +364,18 @@
             
             let actionButtons = '';
             if (proj.link) {
+                // 외부 프로토콜 링크(http, https)인 경우 window.open, 로컬 파일인 경우 window.location
+                const clickAction = proj.link.startsWith('http') ? `window.open('${proj.link}', '_blank')` : `window.location.href='${proj.link}'`;
+                
                 let plusButtonHtml = proj.showPlusBtn ? `
-                    <button onclick="window.location.href='${proj.link}'" class="btn-action w-12 p-0">
+                    <button onclick="${clickAction}" class="btn-action w-12 p-0">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     </button>
                 ` : '';
 
                 actionButtons = `
                     <div class="mt-6 flex gap-3 animate-in fade-in slide-in-from-bottom-2 duration-700">
-                        <button onclick="window.location.href='${proj.link}'" class="btn-action flex-grow">
+                        <button onclick="${clickAction}" class="btn-action flex-grow">
                             ${proj.btnText}
                         </button>
                         ${plusButtonHtml}
