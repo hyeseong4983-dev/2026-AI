@@ -241,7 +241,7 @@
             }
         });
 
-        // 프로젝트 데이터 구성
+        // 프로젝트 데이터 구성 (1~9번 카드 개별 링크 정상화)
         const projects = [
             { 
                 id: 1, 
@@ -327,11 +327,21 @@
                 result: "", 
                 color: "#38b000", 
                 glow: "rgba(56, 176, 0, 0.4)",
-                link: "./09/index.html", // 클릭 시 이동할 경로로 정확히 연결
-                btnText: "결과보기",     
+                link: "./09/index.html",
+                btnText: "결과보기",
                 showPlusBtn: false
             },
-            { id: 9, title: "자동화 워크플로우", tools: "Make", result: "반복적인 행정 업무 프로세스를 AI 에이전트로 자동화하여 효율성 증대", color: "#00bbf9", glow: "rgba(0, 187, 249, 0.4)" },
+            { 
+                id: 9, 
+                title: "구글 ai 스튜디오 실습", // 제목 변경
+                tools: "Make", 
+                result: "", // 기존 지문 삭제
+                color: "#00bbf9", 
+                glow: "rgba(0, 187, 249, 0.4)",
+                link: "./10/index.html", // 결과보기 버튼 경로 설정
+                btnText: "결과보기",     // 결과보기 버튼 텍스트 설정
+                showPlusBtn: false
+            },
             { id: 10, title: "최종: AI 행정 혁신", tools: "Full Stack", result: "데이터 기반의 스마트 시티 운영 및 데이터 주권 확보 정책 제안서", color: "#ff4d4d", glow: "rgba(255, 77, 77, 0.4)" }
         ];
 
