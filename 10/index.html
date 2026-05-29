@@ -1,1 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Box Office Explorer - 실시간 영화 순위 탐색기</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts (Noto Sans KR & Inter) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    }
+    /* 스크롤바 커스텀 */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500/30">
 
+  <!-- 헤더 영역 -->
+  <header class="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-md sticky top-0 z-40 px-6 h-16 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <!-- 로고 -->
+      <a href="../index.html" class="text-slate-400 hover:text-white transition-colors duration-200 text-sm flex items-center space-x-1 mr-2">
+        <span>&larr;</span>
+        <span>메인 홈으로</span>
+      </a>
+      <div class="h-6 w-px bg-slate-800"></div>
+      <div class="flex items-center space-x-2">
+        <span class="text-xl">🎬</span>
+        <span class="font-black tracking-tight text-lg bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">Box Office Explorer</span>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3">
+      <button onclick="openApiModal()" class="text-xs bg-slate-900 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-lg text-slate-300 transition-all flex items-center space-x-1.5">
+        <span>🔑 API 설정</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <main class="max-w-7xl mx-auto px-6 py-8 w-full flex-grow space-y-8">
+    
+    <!-- 소개 및 검색 조건 컨트롤러 -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-900 pb-8">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">실시간 박스오피스 차트</h1>
+        <p class="text-sm text-slate-400 mt-2">일별/주간 영화 순위를 탐색하고 상세한 관객 정보를 확인하세요.</p>
+      </div>
+      
+      <!-- 날짜 선택 및 검색 영역 -->
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- 일별/주간 탭 토글 -->
+        <div class="bg-slate-900 p-1 rounded-xl border border-slate-800 flex">
+          <button id="tabDaily" onclick="setChartType('daily')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white">
+            일별 차트
+          </button>
+          <button id="tabWeekly" onclick="setChartType('weekly')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white">
+            주간 차트
+          </button>
+        </div>
+
+        <!-- 날짜 인풋 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 flex items-center space-x-2">
+          <span class="text-xs text-slate-400">기준일:</span>
+          <input type="date" id="targetDate" onchange="fetchBoxOfficeData()" class="bg-transparent text-xs text-slate-200 outline-none cursor-pointer">
+        </div>
+      </div>
+    </div>
+
+    <!-- 탐색기 주요 대시보드 통계 카드 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 flex items-center space-x-4">
+        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-xl text-indigo-400">📈</div>
+        <div>
+          <span class="text-xs text-slate-400 block">오늘의 박스오피스 1위</span>
+          <span id="statNo1" class="text-base font-bold text-white truncate max-w-[180px] block">-</span>
+        </div>
+      </div>
+      <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 flex items-center space-x-4">
+        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-xl text-emerald-400">🔥</div>
+        <div>
+          <span class="text-xs text-slate-400 block">가장 높은 순위 상승</span>
+          <span id="statHighestRise" class="text-base font-bold text-white truncate max-w-[180px] block">-</span>
+        </div>
+      </div>
+      <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-5 flex items-center space-x-4">
+        <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-xl text-pink-400">👥</div>
+        <div>
+          <span class="text-xs text-slate-400 block">누적 최대 관객수</span>
+          <span id="statMaxAudience" class="text-base font-bold text-white truncate max-w-[180px] block">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 경고/안내 메시지 배너 (KOBIS API 키가 미등록되어 데모 모드일 때만 활성화) -->
+    <div id="demoBanner" class="bg-amber-950/20 border border-amber-500/20 text-amber-300 text-xs px-4 py-3.5 rounded-2xl flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <span>ℹ️</span>
+        <span>현재 <strong>데모 데이터 모드</strong>로 작동 중입니다. 실시간 실데이터 조회를 원하시면 우측 상단의 <strong>API 설정</strong>을 이용하세요!</span>
+      </div>
+      <button onclick="openApiModal()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-200 border border-amber-500/30 px-2.5 py-1 rounded-lg font-bold transition-all shrink-0">
+        설정하기
+      </button>
+    </div>
+
+    <!-- 영화 차트 그리드 리스트 -->
+    <div id="movieGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      <!-- 동적으로 삽입될 영화 카드 템플릿 영역 -->
+    </div>
+
+    <!-- 로딩 스피너 -->
+    <div id="loadingSpinner" class="hidden flex-col items-center justify-center py-20 space-y-3">
+      <div class="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+      <span class="text-xs text-slate-400">영화 데이터를 조회하는 중입니다...</span>
+    </div>
+
+  </main>
+
+  <!-- 푸터 영역 -->
+  <footer class="border-t border-slate-900 bg-slate-950/40 py-8 text-center text-xs text-slate-500 mt-12">
+    <div class="max-w-7xl mx-auto px-6 space-y-1">
+      <p>© 2026 Box Office Explorer. Data provided by KOBIS OpenAPI.</p>
+    </div>
+  </footer>
+
+  <!-- 1. API 키 설정 모달 -->
+  <div id="apiModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+      <button onclick="closeApiModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">&times;</button>
+      <div class="space-y-4">
+        <div class="flex items-center space-x-2.5">
+          <span class="text-xl">⚙️</span>
+          <h2 class="text-lg font-bold text-white">영진위 OpenAPI 설정</h2>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          한국영화진흥위원회(KOBIS)에서 제공하는 고유 발급 API 키를 등록하여 어제 날짜뿐만 아니라 과거 임의 날짜의 박스오피스 데이터를 실시간으로 크롤링해 조회할 수 있습니다.
+        </p>
+        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800/80">
+          <a href="https://www.kobis.or.kr/kobisopenapi/homeKey/key/grtApp.do" target="_blank" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold flex items-center justify-between">
+            <span>🔗 무료 영진위 API 키 발급받기</span>
+            <span>↗</span>
+          </a>
+        </div>
+        <div class="space-y-1.5">
+          <label class="text-xs text-slate-300 font-medium">영진위 API Key</label>
+          <input id="apiKeyInput" type="password" placeholder="여기에 API Key를 입력하세요..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-sm font-mono text-indigo-400 focus:outline-none focus:border-indigo-500 transition-colors">
+        </div>
+        <div class="flex space-x-2 pt-2">
+          <button onclick="saveApiKey()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm py-2.5 rounded-xl transition-colors">적용 및 저장</button>
+          <button onclick="clearApiKey()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-4 py-2.5 rounded-xl transition-colors">키 제거</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 영화 세부정보 보기 모달 -->
+  <div id="movieDetailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+    <div id="detailModalContent" class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative overflow-y-auto max-h-[90vh]">
+      <!-- 동적 주입 -->
+    </div>
+  </div>
+
+  <!-- 비즈니스 자바스크립트 로직 -->
+  <script>
+    // 전역 상태 변수들
+    let currentChartType = 'daily'; // 'daily' or 'weekly'
+    let userApiKey = '';
+    
+    // 모의 데이터 (API 미설정 혹은 에러 발생 시 자동 안전장치로 작동할 최고급 백업 데이터셋)
+    const mockDailyData = [
+      { rank: "1", movieNm: "범죄도시4", openDt: "2024-04-24", audiCnt: "254921", audiAcc: "11234910", rankInten: "0", salesShare: "55.4" },
+      { rank: "2", movieNm: "인사이드 아웃 2", openDt: "2024-06-12", audiCnt: "142984", audiAcc: "5602930", rankInten: "2", salesShare: "24.1" },
+      { rank: "3", movieNm: "퓨리오사: 매드맥스 사가", openDt: "2024-05-22", audiCnt: "65492", audiAcc: "1549210", rankInten: "-1", salesShare: "12.3" },
+      { rank: "4", movieNm: "설계자", openDt: "2024-05-29", audiCnt: "32941", audiAcc: "510294", rankInten: "-1", salesShare: "5.2" },
+      { rank: "5", movieNm: "하이재킹", openDt: "2024-06-21", audiCnt: "19401", audiAcc: "19401", rankInten: "5", salesShare: "3.0" }
+    ];
+
+    const mockWeeklyData = [
+      { rank: "1", movieNm: "인사이드 아웃 2", openDt: "2024-06-12", audiCnt: "1054320", audiAcc: "5602930", rankInten: "0", salesShare: "62.4" },
+      { rank: "2", movieNm: "범죄도시4", openDt: "2024-04-24", audiCnt: "410294", audiAcc: "11234910", rankInten: "0", salesShare: "20.1" },
+      { rank: "3", movieNm: "하이재킹", openDt: "2024-06-21", audiCnt: "294010", audiAcc: "294010", rankInten: "4", salesShare: "10.5" },
+      { rank: "4", movieNm: "퓨리오사: 매드맥스 사가", openDt: "2024-05-22", audiCnt: "142109", audiAcc: "1549210", rankInten: "-1", salesShare: "5.0" },
+      { rank: "5", movieNm: "존 오브 인터레스트", openDt: "2024-06-05", audiCnt: "31049", audiAcc: "156402", rankInten: "2", salesShare: "2.0" }
+    ];
+
+    // 페이지 로드 즉시 실행
+    window.onload = function() {
+      // 1. 저장된 API 키 복구
+      const savedKey = localStorage.getItem('kobis_api_key');
+      if (savedKey) {
+        userApiKey = savedKey;
+        document.getElementById('apiKeyInput').value = userApiKey;
+        document.getElementById('demoBanner').classList.add('hidden');
+      }
+
+      // 2. 어제 날짜 구해서 데이트 인풋 기본값 세팅 (일반적으로 전일자 박스오피스가 오늘 새벽에 최종 컴파일됨)
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const year = yesterday.getFullYear();
+      const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+      const day = String(yesterday.getDate()).padStart(2, '0');
+      document.getElementById('targetDate').value = `${year}-${month}-${day}`;
+
+      // 3. 최초 데이터 렌더링 진행
+      fetchBoxOfficeData();
+    }
+
+    // 일별/주간 토글 기능 제어
+    function setChartType(type) {
+      currentChartType = type;
+      const tabDaily = document.getElementById('tabDaily');
+      const tabWeekly = document.getElementById('tabWeekly');
+
+      if (type === 'daily') {
+        tabDaily.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white";
+        tabWeekly.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white";
+      } else {
+        tabDaily.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white";
+        tabWeekly.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white";
+      }
+      fetchBoxOfficeData();
+    }
+
+    // 박스오피스 정보 가져오기 (실제 API 혹은 백업 가동)
+    async function fetchBoxOfficeData() {
+      const grid = document.getElementById('movieGrid');
+      const spinner = document.getElementById('loadingSpinner');
+      const inputDate = document.getElementById('targetDate').value.replace(/-/g, ''); // YYYYMMDD 변환
+
+      grid.innerHTML = '';
+      spinner.classList.remove('hidden');
+
+      // 1. API 키가 세팅되어 있을 때 실시간 크롤링 시도
+      if (userApiKey && inputDate) {
+        try {
+          let apiUrl = '';
+          if (currentChartType === 'daily') {
+            apiUrl = `https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${userApiKey}&targetDt=${inputDate}`;
+          } else {
+            // 주간/주말 박스오피스는 영진위 주말 조회 API 탑재 (기본 주말형태: 0)
+            apiUrl = `https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchWeeklyBoxOfficeList.json?key=${userApiKey}&targetDt=${inputDate}&weekGb=0`;
+          }
+
+          const response = await fetch(apiUrl);
+          if (!response.ok) throw new Error("API 요청 실패");
+          const data = await response.json();
+          
+          let boxOfficeList = [];
+          if (currentChartType === 'daily') {
+            boxOfficeList = data.boxOfficeResult?.dailyBoxOfficeList || [];
+          } else {
+            boxOfficeList = data.boxOfficeResult?.weeklyBoxOfficeList || [];
+          }
+
+          if (boxOfficeList.length > 0) {
+            renderMovies(boxOfficeList);
+            spinner.classList.add('hidden');
+            return;
+          }
+        } catch (error) {
+          console.warn("실시간 오픈 API 조회 중 문제가 발생하여 데모 데이터 세트로 대체 복구 작동합니다.", error);
+        }
+      }
+
+      // 2. 키가 없거나 실패한 경우 즉각 안전하게 가동되는 최상의 데모 렌더링
+      setTimeout(() => {
+        const dataList = (currentChartType === 'daily') ? mockDailyData : mockWeeklyData;
+        renderMovies(dataList);
+        spinner.classList.add('hidden');
+      }, 300);
+    }
+
+    // 영화 데이터 목록 기반으로 DOM 요소 생성
+    function renderMovies(movies) {
+      const grid = document.getElementById('movieGrid');
+      grid.innerHTML = '';
+
+      // 상단 3개 핵심 통계 위젯 업데이트용 로직
+      let maxAccAudience = 0;
+      let maxAccMovie = '-';
+      let highestRiseValue = 0;
+      let highestRiseMovie = '-';
+
+      movies.forEach((movie, index) => {
+        // 통계 연산
+        const accAudi = parseInt(movie.audiAcc);
+        if (accAudi > maxAccAudience) {
+          maxAccAudience = accAudi;
+          maxAccMovie = movie.movieNm;
+        }
+
+        const inten = parseInt(movie.rankInten);
+        if (inten > highestRiseValue) {
+          highestRiseValue = inten;
+          highestRiseMovie = movie.movieNm;
+        }
+
+        // 영화 카드 카드 그리기
+        const isNew = movie.rankOldAndNew === 'NEW';
+        const rankChange = parseInt(movie.rankInten);
+        
+        // 순위 변동 심볼 빌딩
+        let badgeHtml = '';
+        if (isNew) {
+          badgeHtml = `<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] px-1.5 py-0.5 rounded font-extrabold uppercase">NEW</span>`;
+        } else if (rankChange > 0) {
+          badgeHtml = `<span class="text-emerald-500 text-xs flex items-center">▲ ${rankChange}</span>`;
+        } else if (rankChange < 0) {
+          badgeHtml = `<span class="text-rose-500 text-xs flex items-center">▼ ${Math.abs(rankChange)}</span>`;
+        } else {
+          badgeHtml = `<span class="text-slate-500 text-xs">-</span>`;
+        }
+
+        const card = document.createElement('div');
+        card.className = "bg-slate-900/50 border border-slate-800/80 rounded-2xl overflow-hidden hover:border-indigo-500/40 hover:bg-slate-900 transition-all duration-300 flex flex-col justify-between p-4 cursor-pointer group";
+        card.onclick = () => showMovieDetail(movie);
+
+        // SVG 대체 포스터 생성기 (Broken 이미지 리스크가 전혀 없는 가장 안전하고 수려한 테마형 가상 그래픽 포스터)
+        card.innerHTML = `
+          <div class="space-y-4">
+            <!-- 가상 포스터 그래픽 -->
+            <div class="aspect-[2/3] w-full rounded-xl bg-gradient-to-br from-indigo-950/40 to-slate-950 flex flex-col justify-between p-4 border border-slate-800 relative overflow-hidden group-hover:border-indigo-500/20 transition-all">
+              <div class="absolute inset-0 bg-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="flex items-center justify-between z-10">
+                <span class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-extrabold text-sm text-white">${movie.rank}</span>
+                <div class="bg-slate-950/80 backdrop-blur px-2 py-1 rounded-md border border-slate-800">
+                  ${badgeHtml}
+                </div>
+              </div>
+              <div class="z-10 space-y-1">
+                <span class="text-[10px] uppercase font-bold text-indigo-400 tracking-wider">PREVIEW DECK</span>
+                <h3 class="text-base font-bold text-white line-clamp-2 leading-tight">${movie.movieNm}</h3>
+              </div>
+            </div>
+            
+            <!-- 영화 개요 데이터 -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs text-slate-400">
+                <span>개봉일</span>
+                <span>${movie.openDt}</span>
+              </div>
+              <div class="flex items-center justify-between text-xs text-slate-400">
+                <span>관객수</span>
+                <span class="text-slate-200 font-semibold">${Number(movie.audiCnt).toLocaleString()}명</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 점유율 프로그레스 바 -->
+          <div class="mt-4 pt-4 border-t border-slate-800/60">
+            <div class="flex justify-between text-[10px] text-slate-500 mb-1">
+              <span>매출 점유율</span>
+              <span>${movie.salesShare}%</span>
+            </div>
+            <div class="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
+              <div class="bg-indigo-600 h-1.5 rounded-full" style="width: ${movie.salesShare}%"></div>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+
+      // 대시보드 스탯 연계 업데이트
+      document.getElementById('statNo1').textContent = movies[0]?.movieNm || '데이터 부족';
+      document.getElementById('statHighestRise').textContent = highestRiseMovie !== '-' ? `${highestRiseMovie} (+${highestRiseValue})` : '변동없음';
+      document.getElementById('statMaxAudience').textContent = maxAccMovie !== '-' ? `${maxAccMovie} (${(maxAccAudience / 10000).toFixed(1)}만)` : '-';
+    }
+
+    // 영화 디테일 정보 모달 로출
+    function showMovieDetail(movie) {
+      const modal = document.getElementById('movieDetailModal');
+      const content = document.getElementById('detailModalContent');
+      
+      const accAudienceFormatted = Number(movie.audiAcc).toLocaleString();
+      const todayAudienceFormatted = Number(movie.audiCnt).toLocaleString();
+
+      content.innerHTML = `
+        <button onclick="closeMovieDetail()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">&times;</button>
+        <div class="space-y-6">
+          <div class="flex items-start space-x-4">
+            <div class="w-16 h-16 rounded-2xl bg-indigo-600/10 border border-indigo-500/20 flex items-center justify-center text-3xl shrink-0">
+              🎬
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded font-extrabold">${movie.rank}위</span>
+                <span class="text-xs text-slate-400">누적 관객수 ${accAudienceFormatted}명</span>
+              </div>
+              <h2 class="text-xl font-bold text-white mt-1">${movie.movieNm}</h2>
+              <p class="text-xs text-slate-400 mt-1">개봉년월일: ${movie.openDt}</p>
+            </div>
+          </div>
+
+          <!-- 실시간 관람 상세 수치 테이블 -->
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+            <h3 class="text-xs font-bold text-slate-400 tracking-wider uppercase">BOX OFFICE METRICS</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-800/50">
+                <span class="text-[10px] text-slate-500 block">당일 관객 수</span>
+                <span class="text-sm font-bold text-slate-200 mt-1 block">${todayAudienceFormatted}명</span>
+              </div>
+              <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-800/50">
+                <span class="text-[10px] text-slate-500 block">매출액 점유율</span>
+                <span class="text-sm font-bold text-indigo-400 mt-1 block">${movie.salesShare}%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 안내 텍스트 -->
+          <div class="space-y-2 text-xs text-slate-400 leading-relaxed">
+            <p class="font-bold text-slate-300">💡 팁</p>
+            <p>
+              영화의 줄거리나 출연 배우 등 더 상세한 포스터 정보 연계를 위해 현재 TMDB(The Movie Database)의 추가 API 연계 모듈이 대기 중에 있습니다. 
+              추가 고도화가 필요한 경우 편하게 말씀해주세요!
+            </p>
+          </div>
+
+          <div class="flex space-x-2 pt-4 border-t border-slate-800">
+            <button onclick="closeMovieDetail()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs py-2.5 rounded-xl transition-colors">닫기</button>
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeMovieDetail() {
+      document.getElementById('movieDetailModal').classList.add('hidden');
+    }
+
+    // API 설정 모달 제어 로직
+    function openApiModal() {
+      document.getElementById('apiModal').classList.remove('hidden');
+    }
+
+    function closeApiModal() {
+      document.getElementById('apiModal').classList.add('hidden');
+    }
+
+    function saveApiKey() {
+      const keyVal = document.getElementById('apiKeyInput').value.trim();
+      if (keyVal) {
+        userApiKey = keyVal;
+        localStorage.setItem('kobis_api_key', userApiKey);
+        document.getElementById('demoBanner').classList.add('hidden');
+        closeApiModal();
+        fetchBoxOfficeData();
+      } else {
+        alert('올바른 API 키 형식을 제공해 주세요.');
+      }
+    }
+
+    function clearApiKey() {
+      userApiKey = '';
+      localStorage.removeItem('kobis_api_key');
+      document.getElementById('apiKeyInput').value = '';
+      document.getElementById('demoBanner').classList.remove('hidden');
+      closeApiModal();
+      fetchBoxOfficeData();
+    }
+  </script>
+</body>
+</html>
