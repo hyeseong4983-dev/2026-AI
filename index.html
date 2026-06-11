@@ -248,7 +248,7 @@
             }
         });
 
-        // 프로젝트 데이터 구성 (9번 카드 웹 링크 반영)
+        // 프로젝트 데이터 구성 (10번 카드 업데이트 반영)
         const projects = [
             { 
                 id: 1, 
@@ -345,11 +345,21 @@
                 result: "", 
                 color: "#00bbf9", 
                 glow: "rgba(0, 187, 249, 0.4)",
-                link: "https://box-office-explorer.vercel.app", // 요청한 배포 웹앱 링크 적용
+                link: "https://box-office-explorer.vercel.app", 
                 btnText: "결과보기",     
                 showPlusBtn: false
             },
-            { id: 10, title: "최종: AI 행정 혁신", tools: "Full Stack", result: "데이터 기반의 스마트 시티 운영 및 데이터 주권 확보 정책 제안서", color: "#ff4d4d", glow: "rgba(255, 77, 77, 0.4)" }
+            { 
+                id: 10, 
+                title: "antigravity 실습", 
+                tools: "Full Stack", 
+                result: "", 
+                color: "#ff4d4d", 
+                glow: "rgba(255, 77, 77, 0.4)",
+                link: "./10/index.html", // ./10/index.html로 이동하도록 수정
+                btnText: "결과보기",     
+                showPlusBtn: false
+            }
         ];
 
         const grid = document.getElementById('project-grid');
