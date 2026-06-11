@@ -1,0 +1,1053 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>삶의 만족도와 자살률 상관관계 대시보드 (2020-2024)</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="2020년부터 2024년까지 한국 시도별 삶의 만족도와 자살률 데이터를 바탕으로 한 인터랙티브 시각화 대시보드입니다. '행복-자살 역설(Happy-Suicide Paradox)' 현상을 탐구합니다.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-base: #080B11;
+            --bg-surface: #101622;
+            --bg-card: rgba(22, 30, 49, 0.65);
+            --border-color: rgba(56, 189, 248, 0.15);
+            --text-primary: #F3F4F6;
+            --text-secondary: #9CA3AF;
+            --color-blue: #3B82F6;
+            --color-orange: #F97316;
+            --color-green: #10B981;
+            --color-navy: #1E3A8A;
+            --glow-blue: rgba(59, 130, 246, 0.3);
+            --glow-orange: rgba(249, 115, 22, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(30, 58, 138, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(249, 115, 22, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        header {
+            padding: 1.5rem 4rem 1.5rem 4rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(16, 22, 34, 0.4);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title-container h1 {
+            font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #3B82F6, #60A5FA, #F97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title-container p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .home-btn {
+            background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+            color: white;
+            text-decoration: none;
+            padding: 0.55rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
+        }
+
+        .home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.45);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+        }
+
+        /* Sidebar Controls */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.1);
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #3B82F6;
+        }
+
+        .control-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            background: rgba(8, 11, 17, 0.5);
+            padding: 0.25rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-group-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .btn-group button {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.5rem 0.25rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-group button.active {
+            background: var(--color-blue);
+            color: white;
+            box-shadow: 0 0 10px var(--glow-blue);
+        }
+
+        .slider-container {
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .year-slider {
+            width: 100%;
+            height: 6px;
+            background: #1F2937;
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+            accent-color: var(--color-orange);
+            cursor: pointer;
+        }
+
+        .slider-ticks {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Metric Cards */
+        .metrics-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .metric-card {
+            background: rgba(16, 22, 34, 0.5);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            border-left: 4px solid var(--color-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric-card.orange {
+            border-left-color: var(--color-orange);
+        }
+
+        .metric-card.green {
+            border-left-color: var(--color-green);
+        }
+
+        .metric-info h3 {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-info .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .metric-icon {
+            font-size: 1.5rem;
+            opacity: 0.7;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Tab Controls */
+        .tab-header {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--color-blue);
+            box-shadow: 0 0 10px var(--glow-blue);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chart-box {
+            min-height: 480px;
+            position: relative;
+            width: 100%;
+        }
+
+        /* Table Area */
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .search-box input {
+            width: 100%;
+            background: #080B11;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.6rem 1rem 0.6rem 2.2rem;
+            color: var(--text-primary);
+            outline: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--color-blue);
+            box-shadow: 0 0 8px var(--glow-blue);
+        }
+
+        .table-wrapper {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(16, 22, 34, 0.95);
+            padding: 0.75rem 1rem;
+            font-weight: 700;
+            color: #3B82F6;
+            position: sticky;
+            top: 0;
+            border-bottom: 2px solid var(--border-color);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th i {
+            margin-left: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        tr:hover td {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        /* Paradox Explanation Section */
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, rgba(22, 30, 49, 0.8), rgba(16, 22, 34, 0.8));
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--color-orange);
+            box-shadow: 0 10px 20px rgba(249, 115, 22, 0.05);
+        }
+
+        .insight-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .insight-header i {
+            font-size: 1.5rem;
+            color: var(--color-orange);
+        }
+
+        .insight-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .insight-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .insight-card.expanded p {
+            display: block;
+            overflow: visible;
+            -webkit-line-clamp: unset;
+        }
+
+        .expand-indicator {
+            text-align: right;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--color-blue);
+            font-weight: 600;
+        }
+
+        /* responsive */
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            header {
+                padding: 1rem 2rem;
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title-container">
+            <h1>📊 삶의 만족도 & 자살률 상관관계 대시보드</h1>
+            <p>2020년 ~ 2024년 한국 사회의 주관적 웰빙과 자살률 역설 시각화</p>
+        </div>
+        <div class="header-actions">
+            <a href="https://hyeseong4983-dev.github.io/2026-AI/" class="home-btn"><i class="fa-solid fa-house"></i> 홈</a>
+            <span style="font-size:0.85rem; color:var(--text-secondary);"><i class="fa-solid fa-clock"></i> 최신 데이터 연계 완료</span>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Sidebar Controls -->
+        <div class="sidebar">
+            <div class="card">
+                <div class="sidebar-title"><i class="fa-solid fa-sliders"></i> 제어 패널</div>
+                
+                <div class="control-group">
+                    <label>분석 연도 선택</label>
+                    <div class="slider-container">
+                        <input type="range" class="year-slider" id="yearSlider" min="2020" max="2024" step="1" value="2024">
+                        <div class="slider-ticks">
+                            <span>2020</span>
+                            <span>2021</span>
+                            <span>2022</span>
+                            <span>2023</span>
+                            <span>2024</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>성별 구분</label>
+                    <div class="btn-group" id="genderSelect">
+                        <button class="active" data-gender="Total">전체</button>
+                        <button data-gender="Male">남성</button>
+                        <button data-gender="Female">여성</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>바 차트 측정치 선택</label>
+                    <div class="btn-group btn-group-2" id="metricSelect">
+                        <button class="active" data-metric="suicideRate">자살률</button>
+                        <button data-metric="satRate">만족 비율</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Metric Cards -->
+            <div class="metrics-grid">
+                <div class="card metric-card">
+                    <div class="metric-info">
+                        <h3>전국 평균 삶의 만족도</h3>
+                        <div class="value" id="valSatRate">- %</div>
+                    </div>
+                    <div class="metric-icon" style="color:var(--color-blue);"><i class="fa-solid fa-face-smile"></i></div>
+                </div>
+
+                <div class="card metric-card orange">
+                    <div class="metric-info">
+                        <h3>전국 평균 자살률 (10만명당)</h3>
+                        <div class="value" id="valSuicideRate">- 명</div>
+                    </div>
+                    <div class="metric-icon" style="color:var(--color-orange);"><i class="fa-solid fa-users-slash"></i></div>
+                </div>
+
+                <div class="card metric-card green">
+                    <div class="metric-info">
+                        <h3>지역별 상관계수 (r)</h3>
+                        <div class="value" id="valCorr">-</div>
+                    </div>
+                    <div class="metric-icon" style="color:var(--color-green);"><i class="fa-solid fa-chart-line"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Charts Section -->
+            <div class="card">
+                <div class="tab-header">
+                    <button class="tab-btn active" onclick="switchTab('tabTrend')">전국 시계열 추이</button>
+                    <button class="tab-btn" onclick="switchTab('tabScatter')">지역별 상관관계 (산점도)</button>
+                    <button class="tab-btn" onclick="switchTab('tabBar')">지자체별 비교 (랭킹)</button>
+                </div>
+
+                <!-- Tab 1: Line Chart -->
+                <div class="tab-content active" id="tabTrend">
+                    <div style="margin-bottom:1rem; font-size:0.9rem; color:var(--text-secondary);">
+                        <i class="fa-solid fa-info-circle"></i> 2021년 코로나 팬데믹 시기의 만족도 폭락과 2024년 만족도 회복-자살률 상승 동반 역설을 확인해 보세요.
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Scatter Plot -->
+                <div class="tab-content" id="tabScatter">
+                    <div style="margin-bottom:1rem; font-size:0.9rem; color:var(--text-secondary);">
+                        <i class="fa-solid fa-info-circle"></i> 제어 패널의 <strong>분석 연도 슬라이더</strong>를 조절해 보세요. 2020년 음의 상관관계( = -0.52$)에서 2024년 역설적 양의 관계( = +0.23$)로 추세선이 회전하는 움직임이 시각화됩니다.
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="scatterChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Bar Chart -->
+                <div class="tab-content" id="tabBar">
+                    <div style="margin-bottom:1rem; font-size:0.9rem; color:var(--text-secondary);">
+                        <i class="fa-solid fa-info-circle"></i> 선택된 연도/성별의 17개 시도별 측정치 분포입니다. (전국 평균 제외, 정렬 적용)
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sociological Insight Cards -->
+            <div class="card">
+                <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1rem; color:var(--color-orange);">💡 사회학적 관점: 왜 '행복-자살 역설'이 발생할까요?</h2>
+                <div class="insight-grid">
+                    <div class="insight-card" onclick="expandCard(this)">
+                        <div class="insight-header">
+                            <i class="fa-solid fa-people-arrows"></i>
+                            <h3>상대적 박탈감 효과</h3>
+                        </div>
+                        <p>지역 사회 구성원 대부분이 높은 삶의 만족도를 보고할 때(예: 만족도 1위 충남, 대전), 개인적으로 불행함을 느끼는 취약 계층은 자신의 불행을 더욱 극대화하여 인지하게 됩니다. 즉, '비교 대상'이 너무 밝아 자신의 어둠이 더 짙어지는 효과입니다.</p>
+                        <div class="expand-indicator">더 보기...</div>
+                    </div>
+
+                    <div class="insight-card" onclick="expandCard(this)">
+                        <div class="insight-header">
+                            <i class="fa-solid fa-calculator"></i>
+                            <h3>평균의 함정 (생태학적 오류)</h3>
+                        </div>
+                        <p>설문조사의 '삶의 만족도'는 사회 구성원의 지배적인 다수(평균적 주민)의 상태를 대변합니다. 반면 자살은 극단적 사회적 고립, 심각한 정신 질환, 급격한 경제적 붕괴 등 한계 선상에 놓인 소수의 취약 계층에서 발생합니다. 지역 사회가 전반적으로 윤택해지더라도 취약 계층의 사회안전망이 붕괴된다면 두 지표는 디커플링(Decoupling)될 수 있습니다.</p>
+                        <div class="expand-indicator">더 보기...</div>
+                    </div>
+
+                    <div class="insight-card" onclick="expandCard(this)">
+                        <div class="insight-header">
+                            <i class="fa-solid fa-shield-virus"></i>
+                            <h3>코로나 블루의 지연된 충격</h3>
+                        </div>
+                        <p>2021년 팬데믹 심화기에는 강한 심리적 사회 일체감(Shared Adversity)과 정부의 재정 지원으로 자살률 상승이 일시 억제되었으나 주관적인 만족도는 대폭 붕괴되었습니다. 하지만 포스트 코로나(2024년)에 들어서 일상이 회복되고 경제 지원이 정상화되고 일상이 복구되면서, 유예되었던 부채, 고립, 심리적 내상이 뒤늦게 자살률의 급격한 상승으로 발현되고 있습니다.</p>
+                        <div class="expand-indicator">더 보기...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Table Area -->
+            <div class="card">
+                <div class="table-controls">
+                    <h2 style="font-size:1.2rem; font-weight:700; color:var(--color-blue);">📋 정제 데이터 조회</h2>
+                    <div class="search-box">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="지자체명 검색..." oninput="updateTable()">
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table id="dataTable">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable('region')">시도명 <i class="fa-solid fa-sort"></i></th>
+                                <th onclick="sortTable('year')">연도 <i class="fa-solid fa-sort"></i></th>
+                                <th onclick="sortTable('satRate')">만족 비율 (%) <i class="fa-solid fa-sort"></i></th>
+                                <th onclick="sortTable('score')">만족 점수 (5점) <i class="fa-solid fa-sort"></i></th>
+                                <th onclick="sortTable('suicideRate')">자살률 (10만명당) <i class="fa-solid fa-sort"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Rows injected via Javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Injection -->
+    <script>
+        const rawDataset = [{"region":"전국","gender":"Total","year":2020,"verySat":14.1,"slightSat":28.6,"satRate":42.7,"neutral":44.9,"slightDissat":10.2,"veryDissat":2.3,"dissatRate":12.5,"score":3.423,"suicideRate":25.7},{"region":"전국","gender":"Total","year":2021,"verySat":9.8,"slightSat":24.2,"satRate":34,"neutral":43.1,"slightDissat":18.1,"veryDissat":4.8,"dissatRate":22.9,"score":3.161,"suicideRate":26},{"region":"전국","gender":"Total","year":2022,"verySat":12.1,"slightSat":31.2,"satRate":43.3,"neutral":42.6,"slightDissat":11.6,"veryDissat":2.5,"dissatRate":14.1,"score":3.388,"suicideRate":25.2},{"region":"전국","gender":"Total","year":2023,"verySat":11.9,"slightSat":30.3,"satRate":42.2,"neutral":43.3,"slightDissat":11.5,"veryDissat":3,"dissatRate":14.5,"score":3.366,"suicideRate":27.3},{"region":"전국","gender":"Total","year":2024,"verySat":11.5,"slightSat":28.6,"satRate":40.1,"neutral":47.2,"slightDissat":10.5,"veryDissat":2.2,"dissatRate":12.7,"score":3.367,"suicideRate":29.1},{"region":"전국","gender":"Male","year":2020,"verySat":15.2,"slightSat":28.3,"satRate":43.5,"neutral":44.6,"slightDissat":9.5,"veryDissat":2.3,"dissatRate":11.8,"score":3.443,"suicideRate":35.5},{"region":"전국","gender":"Male","year":2021,"verySat":10.2,"slightSat":23.6,"satRate":33.8,"neutral":42.8,"slightDissat":18.2,"veryDissat":5.3,"dissatRate":23.5,"score":3.155,"suicideRate":35.9},{"region":"전국","gender":"Male","year":2022,"verySat":12.6,"slightSat":30.8,"satRate":43.4,"neutral":42.4,"slightDissat":11.4,"veryDissat":2.7,"dissatRate":14.1,"score":3.389,"suicideRate":35.3},{"region":"전국","gender":"Male","year":2023,"verySat":12.4,"slightSat":30.1,"satRate":42.5,"neutral":43,"slightDissat":11.3,"veryDissat":3.3,"dissatRate":14.6,"score":3.373,"suicideRate":38.3},{"region":"전국","gender":"Male","year":2024,"verySat":11.9,"slightSat":28.6,"satRate":40.5,"neutral":47.1,"slightDissat":10.1,"veryDissat":2.3,"dissatRate":12.4,"score":3.377,"suicideRate":41.8},{"region":"전국","gender":"Female","year":2020,"verySat":13,"slightSat":28.9,"satRate":41.9,"neutral":45.1,"slightDissat":10.8,"veryDissat":2.2,"dissatRate":13,"score":3.397,"suicideRate":15.9},{"region":"전국","gender":"Female","year":2021,"verySat":9.5,"slightSat":24.8,"satRate":34.3,"neutral":43.4,"slightDissat":18.1,"veryDissat":4.3,"dissatRate":22.4,"score":3.174,"suicideRate":16.2},{"region":"전국","gender":"Female","year":2022,"verySat":11.6,"slightSat":31.6,"satRate":43.2,"neutral":42.7,"slightDissat":11.7,"veryDissat":2.3,"dissatRate":14,"score":3.382,"suicideRate":15.1},{"region":"전국","gender":"Female","year":2023,"verySat":11.5,"slightSat":30.5,"satRate":42,"neutral":43.6,"slightDissat":11.8,"veryDissat":2.7,"dissatRate":14.5,"score":3.366,"suicideRate":16.5},{"region":"전국","gender":"Female","year":2024,"verySat":11.1,"slightSat":28.6,"satRate":39.7,"neutral":47.3,"slightDissat":10.9,"veryDissat":2.2,"dissatRate":13.1,"score":3.358,"suicideRate":16.6},{"region":"서울특별시","gender":"Total","year":2020,"verySat":15.5,"slightSat":30.9,"satRate":46.4,"neutral":40.4,"slightDissat":10.7,"veryDissat":2.5,"dissatRate":13.2,"score":3.462,"suicideRate":22.7},{"region":"서울특별시","gender":"Total","year":2021,"verySat":9.3,"slightSat":24.8,"satRate":34.1,"neutral":42.3,"slightDissat":18.1,"veryDissat":5.5,"dissatRate":23.6,"score":3.143,"suicideRate":22.6},{"region":"서울특별시","gender":"Total","year":2022,"verySat":11.7,"slightSat":31.5,"satRate":43.2,"neutral":41.9,"slightDissat":12,"veryDissat":2.9,"dissatRate":14.9,"score":3.371,"suicideRate":21.4},{"region":"서울특별시","gender":"Total","year":2023,"verySat":11.4,"slightSat":30.5,"satRate":41.9,"neutral":43.3,"slightDissat":11.8,"veryDissat":3.1,"dissatRate":14.9,"score":3.356,"suicideRate":23.2},{"region":"서울특별시","gender":"Total","year":2024,"verySat":12.4,"slightSat":33.9,"satRate":46.3,"neutral":41.8,"slightDissat":9.3,"veryDissat":2.6,"dissatRate":11.9,"score":3.442,"suicideRate":24.1},{"region":"서울특별시","gender":"Male","year":2020,"verySat":17.5,"slightSat":30.3,"satRate":47.8,"neutral":40.9,"slightDissat":9,"veryDissat":2.4,"dissatRate":11.4,"score":3.518,"suicideRate":30.3},{"region":"서울특별시","gender":"Male","year":2021,"verySat":9.5,"slightSat":23.5,"satRate":33,"neutral":42,"slightDissat":19,"veryDissat":6,"dissatRate":25,"score":3.115,"suicideRate":30.5},{"region":"서울특별시","gender":"Male","year":2022,"verySat":13,"slightSat":30.7,"satRate":43.7,"neutral":41.3,"slightDissat":11.8,"veryDissat":3.2,"dissatRate":15,"score":3.385,"suicideRate":28.9},{"region":"서울특별시","gender":"Male","year":2023,"verySat":11.4,"slightSat":29.9,"satRate":41.3,"neutral":43.9,"slightDissat":11.4,"veryDissat":3.4,"dissatRate":14.8,"score":3.345,"suicideRate":31.2},{"region":"서울특별시","gender":"Male","year":2024,"verySat":12.9,"slightSat":33.1,"satRate":46,"neutral":42.2,"slightDissat":8.9,"veryDissat":2.8,"dissatRate":11.7,"score":3.441,"suicideRate":33.9},{"region":"서울특별시","gender":"Female","year":2020,"verySat":13.7,"slightSat":31.5,"satRate":45.2,"neutral":39.9,"slightDissat":12.3,"veryDissat":2.7,"dissatRate":15,"score":3.415,"suicideRate":15.4},{"region":"서울특별시","gender":"Female","year":2021,"verySat":9.1,"slightSat":26,"satRate":35.1,"neutral":42.6,"slightDissat":17.3,"veryDissat":5,"dissatRate":22.3,"score":3.169,"suicideRate":15},{"region":"서울특별시","gender":"Female","year":2022,"verySat":10.5,"slightSat":32.3,"satRate":42.8,"neutral":42.5,"slightDissat":12.2,"veryDissat":2.6,"dissatRate":14.8,"score":3.362,"suicideRate":14.4},{"region":"서울특별시","gender":"Female","year":2023,"verySat":11.4,"slightSat":30.9,"satRate":42.3,"neutral":42.8,"slightDissat":12.1,"veryDissat":2.8,"dissatRate":14.9,"score":3.36,"suicideRate":15.6},{"region":"서울특별시","gender":"Female","year":2024,"verySat":12,"slightSat":34.6,"satRate":46.6,"neutral":41.4,"slightDissat":9.6,"veryDissat":2.5,"dissatRate":12.1,"score":3.443,"suicideRate":14.9},{"region":"부산광역시","gender":"Total","year":2020,"verySat":13.5,"slightSat":26.6,"satRate":40.1,"neutral":46.1,"slightDissat":11.3,"veryDissat":2.5,"dissatRate":13.8,"score":3.373,"suicideRate":27.4},{"region":"부산광역시","gender":"Total","year":2021,"verySat":6.8,"slightSat":24.3,"satRate":31.1,"neutral":46.4,"slightDissat":16.6,"veryDissat":5.9,"dissatRate":22.5,"score":3.095,"suicideRate":27.7},{"region":"부산광역시","gender":"Total","year":2022,"verySat":10.8,"slightSat":30.2,"satRate":41,"neutral":43.7,"slightDissat":12.5,"veryDissat":2.7,"dissatRate":15.2,"score":3.336,"suicideRate":27.3},{"region":"부산광역시","gender":"Total","year":2023,"verySat":10.2,"slightSat":30.3,"satRate":40.5,"neutral":44.2,"slightDissat":12.3,"veryDissat":3,"dissatRate":15.3,"score":3.324,"suicideRate":29.1},{"region":"부산광역시","gender":"Total","year":2024,"verySat":12.1,"slightSat":25.4,"satRate":37.5,"neutral":47.5,"slightDissat":12,"veryDissat":3,"dissatRate":15,"score":3.316,"suicideRate":30.3},{"region":"부산광역시","gender":"Male","year":2020,"verySat":14.6,"slightSat":25.4,"satRate":40,"neutral":47.5,"slightDissat":10.7,"veryDissat":1.9,"dissatRate":12.6,"score":3.404,"suicideRate":38.8},{"region":"부산광역시","gender":"Male","year":2021,"verySat":6.9,"slightSat":23.4,"satRate":30.3,"neutral":46.6,"slightDissat":16.5,"veryDissat":6.5,"dissatRate":23,"score":3.074,"suicideRate":37.9},{"region":"부산광역시","gender":"Male","year":2022,"verySat":11,"slightSat":29.8,"satRate":40.8,"neutral":43.8,"slightDissat":12.6,"veryDissat":2.8,"dissatRate":15.4,"score":3.336,"suicideRate":39.1},{"region":"부산광역시","gender":"Male","year":2023,"verySat":10.7,"slightSat":29.3,"satRate":40,"neutral":44.3,"slightDissat":11.9,"veryDissat":3.7,"dissatRate":15.6,"score":3.311,"suicideRate":42.7},{"region":"부산광역시","gender":"Male","year":2024,"verySat":13,"slightSat":24.7,"satRate":37.7,"neutral":48.6,"slightDissat":10.6,"veryDissat":3.1,"dissatRate":13.7,"score":3.339,"suicideRate":42.7},{"region":"부산광역시","gender":"Female","year":2020,"verySat":12.6,"slightSat":27.7,"satRate":40.3,"neutral":44.8,"slightDissat":11.8,"veryDissat":3.1,"dissatRate":14.9,"score":3.349,"suicideRate":16.4},{"region":"부산광역시","gender":"Female","year":2021,"verySat":6.7,"slightSat":25.1,"satRate":31.8,"neutral":46.3,"slightDissat":16.7,"veryDissat":5.3,"dissatRate":22,"score":3.115,"suicideRate":17.9},{"region":"부산광역시","gender":"Female","year":2022,"verySat":10.6,"slightSat":30.7,"satRate":41.3,"neutral":43.7,"slightDissat":12.4,"veryDissat":2.6,"dissatRate":15,"score":3.343,"suicideRate":16},{"region":"부산광역시","gender":"Female","year":2023,"verySat":9.7,"slightSat":31.3,"satRate":41,"neutral":44,"slightDissat":12.7,"veryDissat":2.3,"dissatRate":15,"score":3.334,"suicideRate":16.2},{"region":"부산광역시","gender":"Female","year":2024,"verySat":11.3,"slightSat":25.9,"satRate":37.2,"neutral":46.5,"slightDissat":13.3,"veryDissat":3,"dissatRate":16.3,"score":3.292,"suicideRate":18.5},{"region":"대구광역시","gender":"Total","year":2020,"verySat":9.7,"slightSat":23.5,"satRate":33.2,"neutral":51.1,"slightDissat":13.7,"veryDissat":2.1,"dissatRate":15.8,"score":3.253,"suicideRate":26.1},{"region":"대구광역시","gender":"Total","year":2021,"verySat":9.4,"slightSat":21.6,"satRate":31,"neutral":46,"slightDissat":19.6,"veryDissat":3.5,"dissatRate":23.1,"score":3.141,"suicideRate":26.3},{"region":"대구광역시","gender":"Total","year":2022,"verySat":11.4,"slightSat":29.8,"satRate":41.2,"neutral":43.8,"slightDissat":12.8,"veryDissat":2.2,"dissatRate":15,"score":3.354,"suicideRate":27},{"region":"대구광역시","gender":"Total","year":2023,"verySat":11.2,"slightSat":26.4,"satRate":37.6,"neutral":45.2,"slightDissat":14.2,"veryDissat":3.1,"dissatRate":17.3,"score":3.287,"suicideRate":28.1},{"region":"대구광역시","gender":"Total","year":2024,"verySat":9.2,"slightSat":26.9,"satRate":36.1,"neutral":42.6,"slightDissat":18.9,"veryDissat":2.5,"dissatRate":21.4,"score":3.217,"suicideRate":29.4},{"region":"대구광역시","gender":"Male","year":2020,"verySat":9.9,"slightSat":24,"satRate":33.9,"neutral":50,"slightDissat":13.9,"veryDissat":2.2,"dissatRate":16.1,"score":3.255,"suicideRate":35.8},{"region":"대구광역시","gender":"Male","year":2021,"verySat":8.8,"slightSat":21.5,"satRate":30.3,"neutral":45.6,"slightDissat":20.2,"veryDissat":3.8,"dissatRate":24,"score":3.11,"suicideRate":38.2},{"region":"대구광역시","gender":"Male","year":2022,"verySat":12.5,"slightSat":30.5,"satRate":43,"neutral":41.5,"slightDissat":12.7,"veryDissat":2.9,"dissatRate":15.6,"score":3.373,"suicideRate":39.1},{"region":"대구광역시","gender":"Male","year":2023,"verySat":11.5,"slightSat":25.7,"satRate":37.2,"neutral":45.2,"slightDissat":14,"veryDissat":3.6,"dissatRate":17.6,"score":3.275,"suicideRate":39.1},{"region":"대구광역시","gender":"Male","year":2024,"verySat":8.5,"slightSat":28.1,"satRate":36.6,"neutral":42.1,"slightDissat":18.3,"veryDissat":3,"dissatRate":21.3,"score":3.208,"suicideRate":40.2},{"region":"대구광역시","gender":"Female","year":2020,"verySat":9.5,"slightSat":22.9,"satRate":32.4,"neutral":52.1,"slightDissat":13.5,"veryDissat":2.1,"dissatRate":15.6,"score":3.245,"suicideRate":16.6},{"region":"대구광역시","gender":"Female","year":2021,"verySat":10,"slightSat":21.6,"satRate":31.6,"neutral":46.3,"slightDissat":19,"veryDissat":3.1,"dissatRate":22.1,"score":3.164,"suicideRate":14.7},{"region":"대구광역시","gender":"Female","year":2022,"verySat":10.4,"slightSat":29.1,"satRate":39.5,"neutral":46,"slightDissat":12.9,"veryDissat":1.6,"dissatRate":14.5,"score":3.338,"suicideRate":15.2},{"region":"대구광역시","gender":"Female","year":2023,"verySat":10.8,"slightSat":27,"satRate":37.8,"neutral":45.2,"slightDissat":14.4,"veryDissat":2.5,"dissatRate":16.9,"score":3.289,"suicideRate":17.4},{"region":"대구광역시","gender":"Female","year":2024,"verySat":9.9,"slightSat":25.7,"satRate":35.6,"neutral":43,"slightDissat":19.4,"veryDissat":2.1,"dissatRate":21.5,"score":3.222,"suicideRate":19},{"region":"인천광역시","gender":"Total","year":2020,"verySat":14.6,"slightSat":27.8,"satRate":42.4,"neutral":45.1,"slightDissat":9.5,"veryDissat":3,"dissatRate":12.5,"score":3.415,"suicideRate":26.5},{"region":"인천광역시","gender":"Total","year":2021,"verySat":10.3,"slightSat":20.8,"satRate":31.1,"neutral":45.9,"slightDissat":17.3,"veryDissat":5.7,"dissatRate":23,"score":3.127,"suicideRate":25.9},{"region":"인천광역시","gender":"Total","year":2022,"verySat":11.9,"slightSat":27.4,"satRate":39.3,"neutral":45.7,"slightDissat":11.5,"veryDissat":3.5,"dissatRate":15,"score":3.327,"suicideRate":25.8},{"region":"인천광역시","gender":"Total","year":2023,"verySat":12.6,"slightSat":27.2,"satRate":39.8,"neutral":46.2,"slightDissat":10.4,"veryDissat":3.5,"dissatRate":13.9,"score":3.347,"suicideRate":28.8},{"region":"인천광역시","gender":"Total","year":2024,"verySat":9.5,"slightSat":18.5,"satRate":28,"neutral":58.3,"slightDissat":11.6,"veryDissat":2.2,"dissatRate":13.8,"score":3.218,"suicideRate":31.2},{"region":"인천광역시","gender":"Male","year":2020,"verySat":15.3,"slightSat":27.4,"satRate":42.7,"neutral":45.7,"slightDissat":8.8,"veryDissat":2.8,"dissatRate":11.6,"score":3.436,"suicideRate":37},{"region":"인천광역시","gender":"Male","year":2021,"verySat":11.3,"slightSat":19.7,"satRate":31,"neutral":45.3,"slightDissat":17.8,"veryDissat":6.1,"dissatRate":23.9,"score":3.129,"suicideRate":34.5},{"region":"인천광역시","gender":"Male","year":2022,"verySat":12.2,"slightSat":24.1,"satRate":36.3,"neutral":47.3,"slightDissat":11.6,"veryDissat":4.8,"dissatRate":16.4,"score":3.273,"suicideRate":35},{"region":"인천광역시","gender":"Male","year":2023,"verySat":12.9,"slightSat":25.5,"satRate":38.4,"neutral":47.4,"slightDissat":10.6,"veryDissat":3.6,"dissatRate":14.2,"score":3.335,"suicideRate":40.8},{"region":"인천광역시","gender":"Male","year":2024,"verySat":10.5,"slightSat":18.5,"satRate":29,"neutral":57.5,"slightDissat":10.9,"veryDissat":2.6,"dissatRate":13.5,"score":3.234,"suicideRate":45.9},{"region":"인천광역시","gender":"Female","year":2020,"verySat":13.8,"slightSat":28.1,"satRate":41.9,"neutral":44.6,"slightDissat":10.3,"veryDissat":3.2,"dissatRate":13.5,"score":3.39,"suicideRate":15.9},{"region":"인천광역시","gender":"Female","year":2021,"verySat":9.4,"slightSat":21.8,"satRate":31.2,"neutral":46.5,"slightDissat":16.8,"veryDissat":5.4,"dissatRate":22.2,"score":3.127,"suicideRate":17.3},{"region":"인천광역시","gender":"Female","year":2022,"verySat":11.7,"slightSat":30.8,"satRate":42.5,"neutral":44,"slightDissat":11.4,"veryDissat":2.1,"dissatRate":13.5,"score":3.386,"suicideRate":16.6},{"region":"인천광역시","gender":"Female","year":2023,"verySat":12.3,"slightSat":28.9,"satRate":41.2,"neutral":45.1,"slightDissat":10.3,"veryDissat":3.4,"dissatRate":13.7,"score":3.364,"suicideRate":16.8},{"region":"인천광역시","gender":"Female","year":2024,"verySat":8.5,"slightSat":18.5,"satRate":27,"neutral":59,"slightDissat":12.3,"veryDissat":1.7,"dissatRate":14,"score":3.198,"suicideRate":16.6},{"region":"광주광역시","gender":"Total","year":2020,"verySat":15.5,"slightSat":27.9,"satRate":43.4,"neutral":46.4,"slightDissat":7.8,"veryDissat":2.5,"dissatRate":10.3,"score":3.464,"suicideRate":22.6},{"region":"광주광역시","gender":"Total","year":2021,"verySat":10.3,"slightSat":27.8,"satRate":38.1,"neutral":42.5,"slightDissat":15.3,"veryDissat":4.2,"dissatRate":19.5,"score":3.25,"suicideRate":26.4},{"region":"광주광역시","gender":"Total","year":2022,"verySat":14.1,"slightSat":32.1,"satRate":46.2,"neutral":40.9,"slightDissat":10.8,"veryDissat":2.1,"dissatRate":12.9,"score":3.453,"suicideRate":25},{"region":"광주광역시","gender":"Total","year":2023,"verySat":11.4,"slightSat":31.6,"satRate":43,"neutral":44.2,"slightDissat":10.2,"veryDissat":2.5,"dissatRate":12.7,"score":3.389,"suicideRate":27.3},{"region":"광주광역시","gender":"Total","year":2024,"verySat":13.2,"slightSat":27.5,"satRate":40.7,"neutral":48.6,"slightDissat":8.9,"veryDissat":1.9,"dissatRate":10.8,"score":3.415,"suicideRate":29.9},{"region":"광주광역시","gender":"Male","year":2020,"verySat":17.5,"slightSat":26.2,"satRate":43.7,"neutral":46.7,"slightDissat":6.5,"veryDissat":3.1,"dissatRate":9.6,"score":3.485,"suicideRate":31.1},{"region":"광주광역시","gender":"Male","year":2021,"verySat":11.6,"slightSat":27.8,"satRate":39.4,"neutral":39.5,"slightDissat":15.7,"veryDissat":5.5,"dissatRate":21.2,"score":3.246,"suicideRate":38},{"region":"광주광역시","gender":"Male","year":2022,"verySat":17.1,"slightSat":30.3,"satRate":47.4,"neutral":40.1,"slightDissat":10.4,"veryDissat":2.2,"dissatRate":12.6,"score":3.5,"suicideRate":37.3},{"region":"광주광역시","gender":"Male","year":2023,"verySat":11.7,"slightSat":30.2,"satRate":41.9,"neutral":45.7,"slightDissat":9.6,"veryDissat":2.7,"dissatRate":12.3,"score":3.383,"suicideRate":39.5},{"region":"광주광역시","gender":"Male","year":2024,"verySat":14,"slightSat":27.8,"satRate":41.8,"neutral":47.6,"slightDissat":8.7,"veryDissat":1.9,"dissatRate":10.6,"score":3.433,"suicideRate":44.2},{"region":"광주광역시","gender":"Female","year":2020,"verySat":13.5,"slightSat":29.4,"satRate":42.9,"neutral":46,"slightDissat":9.1,"veryDissat":1.9,"dissatRate":11,"score":3.432,"suicideRate":14.2},{"region":"광주광역시","gender":"Female","year":2021,"verySat":9,"slightSat":27.8,"satRate":36.8,"neutral":45.4,"slightDissat":14.8,"veryDissat":3,"dissatRate":17.8,"score":3.25,"suicideRate":15.1},{"region":"광주광역시","gender":"Female","year":2022,"verySat":11.2,"slightSat":33.9,"satRate":45.1,"neutral":41.7,"slightDissat":11.1,"veryDissat":2,"dissatRate":13.1,"score":3.409,"suicideRate":13},{"region":"광주광역시","gender":"Female","year":2023,"verySat":11.2,"slightSat":33,"satRate":44.2,"neutral":42.8,"slightDissat":10.8,"veryDissat":2.2,"dissatRate":13,"score":3.402,"suicideRate":15.4},{"region":"광주광역시","gender":"Female","year":2024,"verySat":12.5,"slightSat":27.1,"satRate":39.6,"neutral":49.5,"slightDissat":9.1,"veryDissat":1.9,"dissatRate":11,"score":3.395,"suicideRate":16},{"region":"대전광역시","gender":"Total","year":2020,"verySat":14.5,"slightSat":26.8,"satRate":41.3,"neutral":46,"slightDissat":10.8,"veryDissat":1.8,"dissatRate":12.6,"score":3.411,"suicideRate":27.2},{"region":"대전광역시","gender":"Total","year":2021,"verySat":9.5,"slightSat":30.2,"satRate":39.7,"neutral":38.7,"slightDissat":17.4,"veryDissat":4.2,"dissatRate":21.6,"score":3.234,"suicideRate":29.3},{"region":"대전광역시","gender":"Total","year":2022,"verySat":13.8,"slightSat":37.5,"satRate":51.3,"neutral":37.2,"slightDissat":9.5,"veryDissat":2,"dissatRate":11.5,"score":3.516,"suicideRate":25.7},{"region":"대전광역시","gender":"Total","year":2023,"verySat":14.6,"slightSat":34.4,"satRate":49,"neutral":39.2,"slightDissat":9.5,"veryDissat":2.3,"dissatRate":11.8,"score":3.495,"suicideRate":26.4},{"region":"대전광역시","gender":"Total","year":2024,"verySat":16,"slightSat":31.2,"satRate":47.2,"neutral":43.2,"slightDissat":8.1,"veryDissat":1.5,"dissatRate":9.6,"score":3.521,"suicideRate":31.2},{"region":"대전광역시","gender":"Male","year":2020,"verySat":17,"slightSat":26.8,"satRate":43.8,"neutral":44,"slightDissat":9.8,"veryDissat":2.4,"dissatRate":12.2,"score":3.462,"suicideRate":37.9},{"region":"대전광역시","gender":"Male","year":2021,"verySat":7.6,"slightSat":30.4,"satRate":38,"neutral":39.8,"slightDissat":17.4,"veryDissat":4.8,"dissatRate":22.2,"score":3.186,"suicideRate":39.8},{"region":"대전광역시","gender":"Male","year":2022,"verySat":14.8,"slightSat":34.5,"satRate":49.3,"neutral":39.2,"slightDissat":10,"veryDissat":1.6,"dissatRate":11.6,"score":3.512,"suicideRate":33.1},{"region":"대전광역시","gender":"Male","year":2023,"verySat":14.9,"slightSat":34.1,"satRate":49,"neutral":37.6,"slightDissat":10.4,"veryDissat":3,"dissatRate":13.4,"score":3.475,"suicideRate":35},{"region":"대전광역시","gender":"Male","year":2024,"verySat":17.1,"slightSat":30.9,"satRate":48,"neutral":41.2,"slightDissat":9.5,"veryDissat":1.4,"dissatRate":10.9,"score":3.531,"suicideRate":41.7},{"region":"대전광역시","gender":"Female","year":2020,"verySat":12.1,"slightSat":26.9,"satRate":39,"neutral":48,"slightDissat":11.8,"veryDissat":1.3,"dissatRate":13.1,"score":3.37,"suicideRate":16.5},{"region":"대전광역시","gender":"Female","year":2021,"verySat":11.4,"slightSat":30,"satRate":41.4,"neutral":37.7,"slightDissat":17.3,"veryDissat":3.6,"dissatRate":20.9,"score":3.283,"suicideRate":18.8},{"region":"대전광역시","gender":"Female","year":2022,"verySat":12.8,"slightSat":40.6,"satRate":53.4,"neutral":35.2,"slightDissat":9,"veryDissat":2.4,"dissatRate":11.4,"score":3.524,"suicideRate":18.4},{"region":"대전광역시","gender":"Female","year":2023,"verySat":14.3,"slightSat":34.7,"satRate":49,"neutral":40.7,"slightDissat":8.6,"veryDissat":1.6,"dissatRate":10.2,"score":3.512,"suicideRate":17.9},{"region":"대전광역시","gender":"Female","year":2024,"verySat":14.9,"slightSat":31.5,"satRate":46.4,"neutral":45.3,"slightDissat":6.7,"veryDissat":1.5,"dissatRate":8.2,"score":3.513,"suicideRate":20.8},{"region":"울산광역시","gender":"Total","year":2020,"verySat":11.5,"slightSat":29.2,"satRate":40.7,"neutral":48.4,"slightDissat":9.4,"veryDissat":1.4,"dissatRate":10.8,"score":3.397,"suicideRate":26.4},{"region":"울산광역시","gender":"Total","year":2021,"verySat":13.2,"slightSat":23.3,"satRate":36.5,"neutral":39.6,"slightDissat":18.3,"veryDissat":5.6,"dissatRate":23.9,"score":3.202,"suicideRate":28.5},{"region":"울산광역시","gender":"Total","year":2022,"verySat":12.7,"slightSat":28.9,"satRate":41.6,"neutral":41.7,"slightDissat":13.1,"veryDissat":3.7,"dissatRate":16.8,"score":3.341,"suicideRate":26.3},{"region":"울산광역시","gender":"Total","year":2023,"verySat":11,"slightSat":30.4,"satRate":41.4,"neutral":41.4,"slightDissat":14,"veryDissat":3.2,"dissatRate":17.2,"score":3.32,"suicideRate":32.7},{"region":"울산광역시","gender":"Total","year":2024,"verySat":13.4,"slightSat":27.2,"satRate":40.6,"neutral":49.6,"slightDissat":8.1,"veryDissat":1.7,"dissatRate":9.8,"score":3.425,"suicideRate":29.2},{"region":"울산광역시","gender":"Male","year":2020,"verySat":11.6,"slightSat":27.7,"satRate":39.3,"neutral":49.9,"slightDissat":9.1,"veryDissat":1.7,"dissatRate":10.8,"score":3.384,"suicideRate":36.7},{"region":"울산광역시","gender":"Male","year":2021,"verySat":11.9,"slightSat":23.9,"satRate":35.8,"neutral":38.4,"slightDissat":19.7,"veryDissat":6,"dissatRate":25.7,"score":3.157,"suicideRate":40.7},{"region":"울산광역시","gender":"Male","year":2022,"verySat":12.3,"slightSat":28.9,"satRate":41.2,"neutral":40.8,"slightDissat":14,"veryDissat":4.1,"dissatRate":18.1,"score":3.316,"suicideRate":36.1},{"region":"울산광역시","gender":"Male","year":2023,"verySat":9.8,"slightSat":34.6,"satRate":44.4,"neutral":38.2,"slightDissat":13.9,"veryDissat":3.5,"dissatRate":17.4,"score":3.333,"suicideRate":46.8},{"region":"울산광역시","gender":"Male","year":2024,"verySat":14.7,"slightSat":25.8,"satRate":40.5,"neutral":49.9,"slightDissat":7.9,"veryDissat":1.7,"dissatRate":9.6,"score":3.439,"suicideRate":41.1},{"region":"울산광역시","gender":"Female","year":2020,"verySat":11.5,"slightSat":30.9,"satRate":42.4,"neutral":46.8,"slightDissat":9.8,"veryDissat":1.1,"dissatRate":10.9,"score":3.422,"suicideRate":15.6},{"region":"울산광역시","gender":"Female","year":2021,"verySat":14.6,"slightSat":22.6,"satRate":37.2,"neutral":40.8,"slightDissat":16.7,"veryDissat":5.3,"dissatRate":22,"score":3.245,"suicideRate":15.5},{"region":"울산광역시","gender":"Female","year":2022,"verySat":13.1,"slightSat":29,"satRate":42.1,"neutral":42.7,"slightDissat":12.1,"veryDissat":3.2,"dissatRate":15.3,"score":3.37,"suicideRate":16.1},{"region":"울산광역시","gender":"Female","year":2023,"verySat":12.3,"slightSat":25.8,"satRate":38.1,"neutral":44.8,"slightDissat":14.1,"veryDissat":3,"dissatRate":17.1,"score":3.303,"suicideRate":17.9},{"region":"울산광역시","gender":"Female","year":2024,"verySat":12.1,"slightSat":28.7,"satRate":40.8,"neutral":49.2,"slightDissat":8.4,"veryDissat":1.7,"dissatRate":10.1,"score":3.414,"suicideRate":16.7},{"region":"세종특별자치시","gender":"Total","year":2020,"verySat":25.2,"slightSat":33.5,"satRate":58.7,"neutral":33,"slightDissat":6.8,"veryDissat":1.6,"dissatRate":8.4,"score":3.742,"suicideRate":18.4},{"region":"세종특별자치시","gender":"Total","year":2021,"verySat":16,"slightSat":30.1,"satRate":46.1,"neutral":34.8,"slightDissat":15,"veryDissat":4.1,"dissatRate":19.1,"score":3.389,"suicideRate":19},{"region":"세종특별자치시","gender":"Total","year":2022,"verySat":17.9,"slightSat":34.9,"satRate":52.8,"neutral":36.5,"slightDissat":9.3,"veryDissat":1.4,"dissatRate":10.7,"score":3.586,"suicideRate":23.3},{"region":"세종특별자치시","gender":"Total","year":2023,"verySat":15.9,"slightSat":37.4,"satRate":53.3,"neutral":35.1,"slightDissat":9.3,"veryDissat":2.2,"dissatRate":11.5,"score":3.552,"suicideRate":20},{"region":"세종특별자치시","gender":"Total","year":2024,"verySat":16.5,"slightSat":26.3,"satRate":42.8,"neutral":36.4,"slightDissat":17.4,"veryDissat":3.4,"dissatRate":20.8,"score":3.351,"suicideRate":23},{"region":"세종특별자치시","gender":"Male","year":2020,"verySat":26.6,"slightSat":32.8,"satRate":59.4,"neutral":32.6,"slightDissat":6.5,"veryDissat":1.5,"dissatRate":8,"score":3.765,"suicideRate":18.5},{"region":"세종특별자치시","gender":"Male","year":2021,"verySat":17.2,"slightSat":27.7,"satRate":44.9,"neutral":36,"slightDissat":14.2,"veryDissat":4.9,"dissatRate":19.1,"score":3.381,"suicideRate":24.3},{"region":"세종특별자치시","gender":"Male","year":2022,"verySat":19.3,"slightSat":34.6,"satRate":53.9,"neutral":36.9,"slightDissat":7.8,"veryDissat":1.4,"dissatRate":9.2,"score":3.626,"suicideRate":34},{"region":"세종특별자치시","gender":"Male","year":2023,"verySat":16.7,"slightSat":36.1,"satRate":52.8,"neutral":35.9,"slightDissat":9,"veryDissat":2.2,"dissatRate":11.2,"score":3.558,"suicideRate":22.5},{"region":"세종특별자치시","gender":"Male","year":2024,"verySat":17.9,"slightSat":24.9,"satRate":42.8,"neutral":35.9,"slightDissat":17.4,"veryDissat":4,"dissatRate":21.4,"score":3.356,"suicideRate":29},{"region":"세종특별자치시","gender":"Female","year":2020,"verySat":23.7,"slightSat":34.2,"satRate":57.9,"neutral":33.3,"slightDissat":7,"veryDissat":1.7,"dissatRate":8.7,"score":3.709,"suicideRate":18.4},{"region":"세종특별자치시","gender":"Female","year":2021,"verySat":14.8,"slightSat":32.5,"satRate":47.3,"neutral":33.5,"slightDissat":15.9,"veryDissat":3.3,"dissatRate":19.2,"score":3.396,"suicideRate":13.8},{"region":"세종특별자치시","gender":"Female","year":2022,"verySat":16.5,"slightSat":35.2,"satRate":51.7,"neutral":36.1,"slightDissat":10.7,"veryDissat":1.4,"dissatRate":12.1,"score":3.544,"suicideRate":12.7},{"region":"세종특별자치시","gender":"Female","year":2023,"verySat":15.2,"slightSat":38.6,"satRate":53.8,"neutral":34.3,"slightDissat":9.7,"veryDissat":2.2,"dissatRate":11.9,"score":3.549,"suicideRate":17.6},{"region":"세종특별자치시","gender":"Female","year":2024,"verySat":15.2,"slightSat":27.6,"satRate":42.8,"neutral":36.9,"slightDissat":17.5,"veryDissat":2.8,"dissatRate":20.3,"score":3.349,"suicideRate":16.9},{"region":"경기도","gender":"Total","year":2020,"verySat":15.2,"slightSat":29.1,"satRate":44.3,"neutral":43.3,"slightDissat":9.8,"veryDissat":2.6,"dissatRate":12.4,"score":3.445,"suicideRate":23.7},{"region":"경기도","gender":"Total","year":2021,"verySat":10,"slightSat":23.3,"satRate":33.3,"neutral":41,"slightDissat":20.5,"veryDissat":5.2,"dissatRate":25.7,"score":3.124,"suicideRate":23.6},{"region":"경기도","gender":"Total","year":2022,"verySat":12.4,"slightSat":30.2,"satRate":42.6,"neutral":42.9,"slightDissat":11.8,"veryDissat":2.7,"dissatRate":14.5,"score":3.378,"suicideRate":23.1},{"region":"경기도","gender":"Total","year":2023,"verySat":11.8,"slightSat":29.5,"satRate":41.3,"neutral":43.1,"slightDissat":12.3,"veryDissat":3.3,"dissatRate":15.6,"score":3.342,"suicideRate":25.1},{"region":"경기도","gender":"Total","year":2024,"verySat":10.3,"slightSat":25.4,"satRate":35.7,"neutral":51.4,"slightDissat":10.7,"veryDissat":2.3,"dissatRate":13,"score":3.31,"suicideRate":28.2},{"region":"경기도","gender":"Male","year":2020,"verySat":15.8,"slightSat":29.1,"satRate":44.9,"neutral":42.6,"slightDissat":9.8,"veryDissat":2.7,"dissatRate":12.5,"score":3.455,"suicideRate":32.3},{"region":"경기도","gender":"Male","year":2021,"verySat":10.4,"slightSat":22.7,"satRate":33.1,"neutral":41.1,"slightDissat":20.4,"veryDissat":5.5,"dissatRate":25.9,"score":3.124,"suicideRate":31.3},{"region":"경기도","gender":"Male","year":2022,"verySat":11.6,"slightSat":30.9,"satRate":42.5,"neutral":43.1,"slightDissat":11.6,"veryDissat":2.7,"dissatRate":14.3,"score":3.368,"suicideRate":31.4},{"region":"경기도","gender":"Male","year":2023,"verySat":12.2,"slightSat":29.2,"satRate":41.4,"neutral":43.1,"slightDissat":11.7,"veryDissat":3.7,"dissatRate":15.4,"score":3.342,"suicideRate":35.1},{"region":"경기도","gender":"Male","year":2024,"verySat":10.5,"slightSat":25.6,"satRate":36.1,"neutral":51.9,"slightDissat":10,"veryDissat":2.1,"dissatRate":12.1,"score":3.327,"suicideRate":39.5},{"region":"경기도","gender":"Female","year":2020,"verySat":14.5,"slightSat":29.2,"satRate":43.7,"neutral":44,"slightDissat":9.9,"veryDissat":2.4,"dissatRate":12.3,"score":3.435,"suicideRate":14.9},{"region":"경기도","gender":"Female","year":2021,"verySat":9.6,"slightSat":23.9,"satRate":33.5,"neutral":41,"slightDissat":20.6,"veryDissat":4.9,"dissatRate":25.5,"score":3.127,"suicideRate":15.7},{"region":"경기도","gender":"Female","year":2022,"verySat":13.2,"slightSat":29.5,"satRate":42.7,"neutral":42.7,"slightDissat":11.9,"veryDissat":2.6,"dissatRate":14.5,"score":3.385,"suicideRate":14.6},{"region":"경기도","gender":"Female","year":2023,"verySat":11.5,"slightSat":29.7,"satRate":41.2,"neutral":43.1,"slightDissat":12.9,"veryDissat":2.8,"dissatRate":15.7,"score":3.342,"suicideRate":15.1},{"region":"경기도","gender":"Female","year":2024,"verySat":10.2,"slightSat":25.1,"satRate":35.3,"neutral":50.9,"slightDissat":11.3,"veryDissat":2.4,"dissatRate":13.7,"score":3.291,"suicideRate":16.7},{"region":"강원특별자치도","gender":"Total","year":2020,"verySat":13.9,"slightSat":31.9,"satRate":45.8,"neutral":42.3,"slightDissat":9.4,"veryDissat":2.5,"dissatRate":11.9,"score":3.453,"suicideRate":33.2},{"region":"강원특별자치도","gender":"Total","year":2021,"verySat":12.2,"slightSat":25.3,"satRate":37.5,"neutral":43.6,"slightDissat":15,"veryDissat":4,"dissatRate":19,"score":3.27,"suicideRate":32.7},{"region":"강원특별자치도","gender":"Total","year":2022,"verySat":13.7,"slightSat":31.9,"satRate":45.6,"neutral":40.3,"slightDissat":12.1,"veryDissat":2,"dissatRate":14.1,"score":3.432,"suicideRate":33.1},{"region":"강원특별자치도","gender":"Total","year":2023,"verySat":14.1,"slightSat":33,"satRate":47.1,"neutral":40.3,"slightDissat":10.7,"veryDissat":1.8,"dissatRate":12.5,"score":3.466,"suicideRate":34.7},{"region":"강원특별자치도","gender":"Total","year":2024,"verySat":12.1,"slightSat":30.1,"satRate":42.2,"neutral":47.7,"slightDissat":8.5,"veryDissat":1.7,"dissatRate":10.2,"score":3.427,"suicideRate":34.3},{"region":"강원특별자치도","gender":"Male","year":2020,"verySat":13.8,"slightSat":33.1,"satRate":46.9,"neutral":42.2,"slightDissat":8.4,"veryDissat":2.5,"dissatRate":10.9,"score":3.473,"suicideRate":45.6},{"region":"강원특별자치도","gender":"Male","year":2021,"verySat":13.6,"slightSat":23.4,"satRate":37,"neutral":43.8,"slightDissat":15,"veryDissat":4.1,"dissatRate":19.1,"score":3.271,"suicideRate":45.4},{"region":"강원특별자치도","gender":"Male","year":2022,"verySat":15.5,"slightSat":31.8,"satRate":47.3,"neutral":39,"slightDissat":11.8,"veryDissat":1.9,"dissatRate":13.7,"score":3.472,"suicideRate":47.5},{"region":"강원특별자치도","gender":"Male","year":2023,"verySat":15.7,"slightSat":33.2,"satRate":48.9,"neutral":39.1,"slightDissat":10.4,"veryDissat":1.6,"dissatRate":12,"score":3.51,"suicideRate":50.7},{"region":"강원특별자치도","gender":"Male","year":2024,"verySat":12.4,"slightSat":32.2,"satRate":44.6,"neutral":46.5,"slightDissat":7.5,"veryDissat":1.5,"dissatRate":9,"score":3.468,"suicideRate":52.3},{"region":"강원특별자치도","gender":"Female","year":2020,"verySat":13.9,"slightSat":30.7,"satRate":44.6,"neutral":42.4,"slightDissat":10.3,"veryDissat":2.6,"dissatRate":12.9,"score":3.427,"suicideRate":20.7},{"region":"강원특별자치도","gender":"Female","year":2021,"verySat":10.8,"slightSat":27.2,"satRate":38,"neutral":43.3,"slightDissat":14.9,"veryDissat":3.8,"dissatRate":18.7,"score":3.263,"suicideRate":19.9},{"region":"강원특별자치도","gender":"Female","year":2022,"verySat":11.9,"slightSat":32,"satRate":43.9,"neutral":41.5,"slightDissat":12.5,"veryDissat":2.1,"dissatRate":14.6,"score":3.391,"suicideRate":18.5},{"region":"강원특별자치도","gender":"Female","year":2023,"verySat":12.5,"slightSat":32.9,"satRate":45.4,"neutral":41.5,"slightDissat":11.1,"veryDissat":2,"dissatRate":13.1,"score":3.428,"suicideRate":18.6},{"region":"강원특별자치도","gender":"Female","year":2024,"verySat":11.8,"slightSat":28,"satRate":39.8,"neutral":48.8,"slightDissat":9.5,"veryDissat":1.9,"dissatRate":11.4,"score":3.383,"suicideRate":16.2},{"region":"충청북도","gender":"Total","year":2020,"verySat":12.4,"slightSat":28.1,"satRate":40.5,"neutral":46.8,"slightDissat":10.4,"veryDissat":2.4,"dissatRate":12.8,"score":3.38,"suicideRate":27.1},{"region":"충청북도","gender":"Total","year":2021,"verySat":11,"slightSat":24.5,"satRate":35.5,"neutral":46.2,"slightDissat":14.8,"veryDissat":3.4,"dissatRate":18.2,"score":3.246,"suicideRate":31.8},{"region":"충청북도","gender":"Total","year":2022,"verySat":11.4,"slightSat":31.2,"satRate":42.6,"neutral":43.2,"slightDissat":11.6,"veryDissat":2.6,"dissatRate":14.2,"score":3.372,"suicideRate":29},{"region":"충청북도","gender":"Total","year":2023,"verySat":13.5,"slightSat":31.8,"satRate":45.3,"neutral":39.9,"slightDissat":11.6,"veryDissat":3.2,"dissatRate":14.8,"score":3.408,"suicideRate":33.3},{"region":"충청북도","gender":"Total","year":2024,"verySat":13,"slightSat":27.7,"satRate":40.7,"neutral":47,"slightDissat":10,"veryDissat":2.2,"dissatRate":12.2,"score":3.39,"suicideRate":31.8},{"region":"충청북도","gender":"Male","year":2020,"verySat":13.1,"slightSat":27.8,"satRate":40.9,"neutral":47.4,"slightDissat":9.9,"veryDissat":1.7,"dissatRate":11.6,"score":3.404,"suicideRate":38.5},{"region":"충청북도","gender":"Male","year":2021,"verySat":11.4,"slightSat":24.9,"satRate":36.3,"neutral":46.5,"slightDissat":13.5,"veryDissat":3.7,"dissatRate":17.2,"score":3.268,"suicideRate":44.5},{"region":"충청북도","gender":"Male","year":2022,"verySat":11.5,"slightSat":30.2,"satRate":41.7,"neutral":44,"slightDissat":11.6,"veryDissat":2.6,"dissatRate":14.2,"score":3.361,"suicideRate":38.3},{"region":"충청북도","gender":"Male","year":2023,"verySat":13.3,"slightSat":30.8,"satRate":44.1,"neutral":41.1,"slightDissat":11.2,"veryDissat":3.6,"dissatRate":14.8,"score":3.39,"suicideRate":45.3},{"region":"충청북도","gender":"Male","year":2024,"verySat":12.4,"slightSat":28.1,"satRate":40.5,"neutral":47.2,"slightDissat":10,"veryDissat":2.3,"dissatRate":12.3,"score":3.383,"suicideRate":46.7},{"region":"충청북도","gender":"Female","year":2020,"verySat":11.6,"slightSat":28.3,"satRate":39.9,"neutral":46.1,"slightDissat":10.9,"veryDissat":3.1,"dissatRate":14,"score":3.344,"suicideRate":15.4},{"region":"충청북도","gender":"Female","year":2021,"verySat":10.6,"slightSat":24.1,"satRate":34.7,"neutral":46,"slightDissat":16.3,"veryDissat":3.1,"dissatRate":19.4,"score":3.231,"suicideRate":18.7},{"region":"충청북도","gender":"Female","year":2022,"verySat":11.3,"slightSat":32.1,"satRate":43.4,"neutral":42.4,"slightDissat":11.6,"veryDissat":2.5,"dissatRate":14.1,"score":3.378,"suicideRate":19.4},{"region":"충청북도","gender":"Female","year":2023,"verySat":13.6,"slightSat":32.8,"satRate":46.4,"neutral":38.8,"slightDissat":12.1,"veryDissat":2.7,"dissatRate":14.8,"score":3.425,"suicideRate":20.8},{"region":"충청북도","gender":"Female","year":2024,"verySat":13.6,"slightSat":27.4,"satRate":41,"neutral":46.9,"slightDissat":10.1,"veryDissat":2.1,"dissatRate":12.2,"score":3.406,"suicideRate":16.4},{"region":"충청남도","gender":"Total","year":2020,"verySat":12.1,"slightSat":24.7,"satRate":36.8,"neutral":52.8,"slightDissat":8.9,"veryDissat":1.4,"dissatRate":10.3,"score":3.369,"suicideRate":34.7},{"region":"충청남도","gender":"Total","year":2021,"verySat":12.4,"slightSat":27.8,"satRate":40.2,"neutral":41.7,"slightDissat":15.3,"veryDissat":2.8,"dissatRate":18.1,"score":3.317,"suicideRate":32.2},{"region":"충청남도","gender":"Total","year":2022,"verySat":15.2,"slightSat":32.3,"satRate":47.5,"neutral":43.1,"slightDissat":7.7,"veryDissat":1.7,"dissatRate":9.4,"score":3.516,"suicideRate":33.2},{"region":"충청남도","gender":"Total","year":2023,"verySat":15.1,"slightSat":30,"satRate":45.1,"neutral":43.3,"slightDissat":9.4,"veryDissat":2.3,"dissatRate":11.7,"score":3.465,"suicideRate":36.5},{"region":"충청남도","gender":"Total","year":2024,"verySat":16.3,"slightSat":30.7,"satRate":47,"neutral":46.7,"slightDissat":4.9,"veryDissat":1.3,"dissatRate":6.2,"score":3.555,"suicideRate":34.8},{"region":"충청남도","gender":"Male","year":2020,"verySat":13.2,"slightSat":24.4,"satRate":37.6,"neutral":51,"slightDissat":9.8,"veryDissat":1.7,"dissatRate":11.5,"score":3.379,"suicideRate":47.9},{"region":"충청남도","gender":"Male","year":2021,"verySat":14,"slightSat":28.7,"satRate":42.7,"neutral":39.4,"slightDissat":14.7,"veryDissat":3.2,"dissatRate":17.9,"score":3.356,"suicideRate":45},{"region":"충청남도","gender":"Male","year":2022,"verySat":16.1,"slightSat":30.7,"satRate":46.8,"neutral":43.9,"slightDissat":7.6,"veryDissat":1.7,"dissatRate":9.3,"score":3.519,"suicideRate":48.3},{"region":"충청남도","gender":"Male","year":2023,"verySat":17,"slightSat":29.2,"satRate":46.2,"neutral":43.1,"slightDissat":8.3,"veryDissat":2.3,"dissatRate":10.6,"score":3.5,"suicideRate":50},{"region":"충청남도","gender":"Male","year":2024,"verySat":17.2,"slightSat":31.2,"satRate":48.4,"neutral":44.5,"slightDissat":5.2,"veryDissat":1.8,"dissatRate":7,"score":3.565,"suicideRate":51.1},{"region":"충청남도","gender":"Female","year":2020,"verySat":11.1,"slightSat":25,"satRate":36.1,"neutral":54.8,"slightDissat":8,"veryDissat":1.1,"dissatRate":9.1,"score":3.37,"suicideRate":21},{"region":"충청남도","gender":"Female","year":2021,"verySat":10.8,"slightSat":26.8,"satRate":37.6,"neutral":44.1,"slightDissat":15.9,"veryDissat":2.4,"dissatRate":18.3,"score":3.277,"suicideRate":18.8},{"region":"충청남도","gender":"Female","year":2022,"verySat":14.4,"slightSat":33.9,"satRate":48.3,"neutral":42.3,"slightDissat":7.8,"veryDissat":1.7,"dissatRate":9.5,"score":3.518,"suicideRate":17.3},{"region":"충청남도","gender":"Female","year":2023,"verySat":13,"slightSat":30.8,"satRate":43.8,"neutral":43.4,"slightDissat":10.5,"veryDissat":2.2,"dissatRate":12.7,"score":3.416,"suicideRate":22.2},{"region":"충청남도","gender":"Female","year":2024,"verySat":15.3,"slightSat":30.3,"satRate":45.6,"neutral":49.1,"slightDissat":4.6,"veryDissat":0.7,"dissatRate":5.3,"score":3.549,"suicideRate":17.6},{"region":"전북특별자치도","gender":"Total","year":2020,"verySat":12.4,"slightSat":28.7,"satRate":41.1,"neutral":46.6,"slightDissat":10.3,"veryDissat":2,"dissatRate":12.3,"score":3.392,"suicideRate":27.8},{"region":"전북특별자치도","gender":"Total","year":2021,"verySat":10.5,"slightSat":27.7,"satRate":38.2,"neutral":42.9,"slightDissat":15.7,"veryDissat":3.2,"dissatRate":18.9,"score":3.266,"suicideRate":28.5},{"region":"전북특별자치도","gender":"Total","year":2022,"verySat":11,"slightSat":32.8,"satRate":43.8,"neutral":43.5,"slightDissat":10.1,"veryDissat":2.5,"dissatRate":12.6,"score":3.394,"suicideRate":26.1},{"region":"전북특별자치도","gender":"Total","year":2023,"verySat":11.8,"slightSat":35.3,"satRate":47.1,"neutral":37.5,"slightDissat":11.4,"veryDissat":3.9,"dissatRate":15.3,"score":3.394,"suicideRate":25.6},{"region":"전북특별자치도","gender":"Total","year":2024,"verySat":10.6,"slightSat":34.2,"satRate":44.8,"neutral":41,"slightDissat":11.1,"veryDissat":3,"dissatRate":14.1,"score":3.38,"suicideRate":32.3},{"region":"전북특별자치도","gender":"Male","year":2020,"verySat":13.9,"slightSat":27.9,"satRate":41.8,"neutral":44.5,"slightDissat":11.4,"veryDissat":2.4,"dissatRate":13.8,"score":3.398,"suicideRate":41.7},{"region":"전북특별자치도","gender":"Male","year":2021,"verySat":10.5,"slightSat":28.8,"satRate":39.3,"neutral":41.5,"slightDissat":14.9,"veryDissat":4.3,"dissatRate":19.2,"score":3.263,"suicideRate":42.5},{"region":"전북특별자치도","gender":"Male","year":2022,"verySat":11,"slightSat":33.4,"satRate":44.4,"neutral":43,"slightDissat":9.1,"veryDissat":3.5,"dissatRate":12.6,"score":3.393,"suicideRate":38.5},{"region":"전북특별자치도","gender":"Male","year":2023,"verySat":12.6,"slightSat":35,"satRate":47.6,"neutral":36.7,"slightDissat":11.7,"veryDissat":4,"dissatRate":15.7,"score":3.405,"suicideRate":37.4},{"region":"전북특별자치도","gender":"Male","year":2024,"verySat":10.3,"slightSat":34.4,"satRate":44.7,"neutral":40.9,"slightDissat":11.2,"veryDissat":3.3,"dissatRate":14.5,"score":3.375,"suicideRate":45.7},{"region":"전북특별자치도","gender":"Female","year":2020,"verySat":11,"slightSat":29.5,"satRate":40.5,"neutral":48.8,"slightDissat":9.2,"veryDissat":1.6,"dissatRate":10.8,"score":3.394,"suicideRate":14},{"region":"전북특별자치도","gender":"Female","year":2021,"verySat":10.5,"slightSat":26.6,"satRate":37.1,"neutral":44.2,"slightDissat":16.5,"veryDissat":2.2,"dissatRate":18.7,"score":3.267,"suicideRate":14.6},{"region":"전북특별자치도","gender":"Female","year":2022,"verySat":11.1,"slightSat":32.3,"satRate":43.4,"neutral":44.1,"slightDissat":11.1,"veryDissat":1.4,"dissatRate":12.5,"score":3.406,"suicideRate":13.8},{"region":"전북특별자치도","gender":"Female","year":2023,"verySat":11.1,"slightSat":35.7,"satRate":46.8,"neutral":38.2,"slightDissat":11.1,"veryDissat":3.9,"dissatRate":15,"score":3.39,"suicideRate":13.8},{"region":"전북특별자치도","gender":"Female","year":2024,"verySat":11,"slightSat":34.1,"satRate":45.1,"neutral":41.2,"slightDissat":11,"veryDissat":2.8,"dissatRate":13.8,"score":3.398,"suicideRate":19},{"region":"전라남도","gender":"Total","year":2020,"verySat":14.2,"slightSat":26.7,"satRate":40.9,"neutral":49.3,"slightDissat":8.2,"veryDissat":1.5,"dissatRate":9.7,"score":3.436,"suicideRate":28.5},{"region":"전라남도","gender":"Total","year":2021,"verySat":11.6,"slightSat":25.9,"satRate":37.5,"neutral":44.3,"slightDissat":14.6,"veryDissat":3.5,"dissatRate":18.1,"score":3.272,"suicideRate":30.2},{"region":"전라남도","gender":"Total","year":2022,"verySat":12.2,"slightSat":32.5,"satRate":44.7,"neutral":41.6,"slightDissat":11.4,"veryDissat":2.3,"dissatRate":13.7,"score":3.409,"suicideRate":26.6},{"region":"전라남도","gender":"Total","year":2023,"verySat":13.5,"slightSat":28.5,"satRate":42,"neutral":46.7,"slightDissat":9.1,"veryDissat":2.2,"dissatRate":11.3,"score":3.42,"suicideRate":29.2},{"region":"전라남도","gender":"Total","year":2024,"verySat":10.3,"slightSat":29.9,"satRate":40.2,"neutral":45.4,"slightDissat":12.6,"veryDissat":1.8,"dissatRate":14.4,"score":3.343,"suicideRate":34.5},{"region":"전라남도","gender":"Male","year":2020,"verySat":16.3,"slightSat":28.1,"satRate":44.4,"neutral":46.9,"slightDissat":7,"veryDissat":1.7,"dissatRate":8.7,"score":3.503,"suicideRate":41.3},{"region":"전라남도","gender":"Male","year":2021,"verySat":12.6,"slightSat":25.2,"satRate":37.8,"neutral":43.4,"slightDissat":14.5,"veryDissat":4.4,"dissatRate":18.9,"score":3.274,"suicideRate":42.7},{"region":"전라남도","gender":"Male","year":2022,"verySat":13.7,"slightSat":31.9,"satRate":45.6,"neutral":40.5,"slightDissat":11.7,"veryDissat":2.1,"dissatRate":13.8,"score":3.431,"suicideRate":38.7},{"region":"전라남도","gender":"Male","year":2023,"verySat":15,"slightSat":28.1,"satRate":43.1,"neutral":44.1,"slightDissat":10.9,"veryDissat":1.9,"dissatRate":12.8,"score":3.434,"suicideRate":40.9},{"region":"전라남도","gender":"Male","year":2024,"verySat":10.8,"slightSat":30.5,"satRate":41.3,"neutral":45.6,"slightDissat":11.3,"veryDissat":1.7,"dissatRate":13,"score":3.371,"suicideRate":53.6},{"region":"전라남도","gender":"Female","year":2020,"verySat":12.2,"slightSat":25.3,"satRate":37.5,"neutral":51.7,"slightDissat":9.4,"veryDissat":1.4,"dissatRate":10.8,"score":3.375,"suicideRate":15.6},{"region":"전라남도","gender":"Female","year":2021,"verySat":10.5,"slightSat":26.7,"satRate":37.2,"neutral":45.2,"slightDissat":14.8,"veryDissat":2.7,"dissatRate":17.5,"score":3.272,"suicideRate":17.6},{"region":"전라남도","gender":"Female","year":2022,"verySat":10.7,"slightSat":33.1,"satRate":43.8,"neutral":42.6,"slightDissat":11,"veryDissat":2.6,"dissatRate":13.6,"score":3.383,"suicideRate":14.5},{"region":"전라남도","gender":"Female","year":2023,"verySat":12,"slightSat":28.8,"satRate":40.8,"neutral":49.4,"slightDissat":7.3,"veryDissat":2.5,"dissatRate":9.8,"score":3.405,"suicideRate":17.4},{"region":"전라남도","gender":"Female","year":2024,"verySat":9.9,"slightSat":29.2,"satRate":39.1,"neutral":45.2,"slightDissat":13.8,"veryDissat":1.9,"dissatRate":15.7,"score":3.314,"suicideRate":15.1},{"region":"경상북도","gender":"Total","year":2020,"verySat":9.7,"slightSat":24.7,"satRate":34.4,"neutral":52.5,"slightDissat":11.4,"veryDissat":1.7,"dissatRate":13.1,"score":3.293,"suicideRate":28.6},{"region":"경상북도","gender":"Total","year":2021,"verySat":7.7,"slightSat":19.8,"satRate":27.5,"neutral":46.9,"slightDissat":20.8,"veryDissat":4.8,"dissatRate":25.6,"score":3.048,"suicideRate":29},{"region":"경상북도","gender":"Total","year":2022,"verySat":11.5,"slightSat":32.3,"satRate":43.8,"neutral":42.4,"slightDissat":11.8,"veryDissat":2,"dissatRate":13.8,"score":3.395,"suicideRate":26.8},{"region":"경상북도","gender":"Total","year":2023,"verySat":10.2,"slightSat":27.9,"satRate":38.1,"neutral":47.1,"slightDissat":12,"veryDissat":2.7,"dissatRate":14.7,"score":3.306,"suicideRate":30.5},{"region":"경상북도","gender":"Total","year":2024,"verySat":9.2,"slightSat":31.7,"satRate":40.9,"neutral":46.2,"slightDissat":10.7,"veryDissat":2.2,"dissatRate":12.9,"score":3.35,"suicideRate":31.6},{"region":"경상북도","gender":"Male","year":2020,"verySat":10.9,"slightSat":24.4,"satRate":35.3,"neutral":52.5,"slightDissat":9.9,"veryDissat":2.2,"dissatRate":12.1,"score":3.316,"suicideRate":37.8},{"region":"경상북도","gender":"Male","year":2021,"verySat":8.1,"slightSat":19,"satRate":27.1,"neutral":47.6,"slightDissat":19.7,"veryDissat":5.5,"dissatRate":25.2,"score":3.042,"suicideRate":40.8},{"region":"경상북도","gender":"Male","year":2022,"verySat":13,"slightSat":31.6,"satRate":44.6,"neutral":41.5,"slightDissat":12.1,"veryDissat":1.9,"dissatRate":14,"score":3.42,"suicideRate":38.8},{"region":"경상북도","gender":"Male","year":2023,"verySat":10.7,"slightSat":30.5,"satRate":41.2,"neutral":44.3,"slightDissat":12.1,"veryDissat":2.4,"dissatRate":14.5,"score":3.35,"suicideRate":44.2},{"region":"경상북도","gender":"Male","year":2024,"verySat":10.4,"slightSat":31.8,"satRate":42.2,"neutral":44,"slightDissat":11.3,"veryDissat":2.6,"dissatRate":13.9,"score":3.364,"suicideRate":46.6},{"region":"경상북도","gender":"Female","year":2020,"verySat":8.5,"slightSat":24.9,"satRate":33.4,"neutral":52.6,"slightDissat":12.8,"veryDissat":1.3,"dissatRate":14.1,"score":3.268,"suicideRate":19.3},{"region":"경상북도","gender":"Female","year":2021,"verySat":7.2,"slightSat":20.6,"satRate":27.8,"neutral":46.2,"slightDissat":21.9,"veryDissat":4.1,"dissatRate":26,"score":3.049,"suicideRate":17.1},{"region":"경상북도","gender":"Female","year":2022,"verySat":10.1,"slightSat":33,"satRate":43.1,"neutral":43.3,"slightDissat":11.5,"veryDissat":2.2,"dissatRate":13.7,"score":3.376,"suicideRate":14.7},{"region":"경상북도","gender":"Female","year":2023,"verySat":9.8,"slightSat":25.3,"satRate":35.1,"neutral":50,"slightDissat":12,"veryDissat":3,"dissatRate":15,"score":3.272,"suicideRate":16.6},{"region":"경상북도","gender":"Female","year":2024,"verySat":8,"slightSat":31.7,"satRate":39.7,"neutral":48.4,"slightDissat":10.1,"veryDissat":1.9,"dissatRate":12,"score":3.341,"suicideRate":16.3},{"region":"경상남도","gender":"Total","year":2020,"verySat":14.6,"slightSat":31.3,"satRate":45.9,"neutral":43,"slightDissat":9.3,"veryDissat":1.8,"dissatRate":11.1,"score":3.476,"suicideRate":25.3},{"region":"경상남도","gender":"Total","year":2021,"verySat":8.2,"slightSat":24.1,"satRate":32.3,"neutral":45.4,"slightDissat":18,"veryDissat":4.2,"dissatRate":22.2,"score":3.138,"suicideRate":26.3},{"region":"경상남도","gender":"Total","year":2022,"verySat":10.1,"slightSat":32.8,"satRate":42.9,"neutral":43.1,"slightDissat":12.1,"veryDissat":1.9,"dissatRate":14,"score":3.371,"suicideRate":26.7},{"region":"경상남도","gender":"Total","year":2023,"verySat":10.7,"slightSat":33.7,"satRate":44.4,"neutral":43.6,"slightDissat":9.7,"veryDissat":2.4,"dissatRate":12.1,"score":3.409,"suicideRate":28.5},{"region":"경상남도","gender":"Total","year":2024,"verySat":10.4,"slightSat":32.5,"satRate":42.9,"neutral":45.2,"slightDissat":10.3,"veryDissat":1.5,"dissatRate":11.8,"score":3.397,"suicideRate":28.5},{"region":"경상남도","gender":"Male","year":2020,"verySat":16,"slightSat":31.6,"satRate":47.6,"neutral":41.9,"slightDissat":8.5,"veryDissat":2.1,"dissatRate":10.6,"score":3.512,"suicideRate":36.3},{"region":"경상남도","gender":"Male","year":2021,"verySat":8.4,"slightSat":23,"satRate":31.4,"neutral":45.2,"slightDissat":17.9,"veryDissat":5.5,"dissatRate":23.4,"score":3.109,"suicideRate":37.6},{"region":"경상남도","gender":"Male","year":2022,"verySat":10.9,"slightSat":33.1,"satRate":44,"neutral":42.6,"slightDissat":11.3,"veryDissat":2.1,"dissatRate":13.4,"score":3.394,"suicideRate":39.7},{"region":"경상남도","gender":"Male","year":2023,"verySat":11.3,"slightSat":34.8,"satRate":46.1,"neutral":42,"slightDissat":9.5,"veryDissat":2.5,"dissatRate":12,"score":3.432,"suicideRate":39.3},{"region":"경상남도","gender":"Male","year":2024,"verySat":10.3,"slightSat":32.8,"satRate":43.1,"neutral":44.5,"slightDissat":10.9,"veryDissat":1.5,"dissatRate":12.4,"score":3.395,"suicideRate":40.8},{"region":"경상남도","gender":"Female","year":2020,"verySat":13.2,"slightSat":30.9,"satRate":44.1,"neutral":44.2,"slightDissat":10.2,"veryDissat":1.5,"dissatRate":11.7,"score":3.441,"suicideRate":14.3},{"region":"경상남도","gender":"Female","year":2021,"verySat":8,"slightSat":25.2,"satRate":33.2,"neutral":45.6,"slightDissat":18.1,"veryDissat":3,"dissatRate":21.1,"score":3.168,"suicideRate":14.9},{"region":"경상남도","gender":"Female","year":2022,"verySat":9.4,"slightSat":32.6,"satRate":42,"neutral":43.5,"slightDissat":12.8,"veryDissat":1.6,"dissatRate":14.4,"score":3.351,"suicideRate":13.6},{"region":"경상남도","gender":"Female","year":2023,"verySat":10.2,"slightSat":32.5,"satRate":42.7,"neutral":45.1,"slightDissat":10,"veryDissat":2.3,"dissatRate":12.3,"score":3.386,"suicideRate":17.6},{"region":"경상남도","gender":"Female","year":2024,"verySat":10.5,"slightSat":32.2,"satRate":42.7,"neutral":46,"slightDissat":9.7,"veryDissat":1.5,"dissatRate":11.2,"score":3.402,"suicideRate":16},{"region":"제주특별자치도","gender":"Total","year":2020,"verySat":15.3,"slightSat":32.6,"satRate":47.9,"neutral":41.5,"slightDissat":8.8,"veryDissat":1.8,"dissatRate":10.6,"score":3.508,"suicideRate":30},{"region":"제주특별자치도","gender":"Total","year":2021,"verySat":13.7,"slightSat":24.8,"satRate":38.5,"neutral":41.7,"slightDissat":15.8,"veryDissat":4,"dissatRate":19.8,"score":3.284,"suicideRate":26.1},{"region":"제주특별자치도","gender":"Total","year":2022,"verySat":14.5,"slightSat":33.7,"satRate":48.2,"neutral":40.7,"slightDissat":9.4,"veryDissat":1.8,"dissatRate":11.2,"score":3.5,"suicideRate":26},{"region":"제주특별자치도","gender":"Total","year":2023,"verySat":13.1,"slightSat":31.6,"satRate":44.7,"neutral":42.9,"slightDissat":9,"veryDissat":3.3,"dissatRate":12.3,"score":3.419,"suicideRate":30.5},{"region":"제주특별자치도","gender":"Total","year":2024,"verySat":12.8,"slightSat":30.6,"satRate":43.4,"neutral":46.4,"slightDissat":8.4,"veryDissat":1.8,"dissatRate":10.2,"score":3.442,"suicideRate":36.3},{"region":"제주특별자치도","gender":"Male","year":2020,"verySat":16.6,"slightSat":32.2,"satRate":48.8,"neutral":41.8,"slightDissat":8,"veryDissat":1.4,"dissatRate":9.4,"score":3.546,"suicideRate":42.6},{"region":"제주특별자치도","gender":"Male","year":2021,"verySat":14.3,"slightSat":24.1,"satRate":38.4,"neutral":42.4,"slightDissat":14.4,"veryDissat":4.8,"dissatRate":19.2,"score":3.287,"suicideRate":41},{"region":"제주특별자치도","gender":"Male","year":2022,"verySat":15.2,"slightSat":32.8,"satRate":48,"neutral":41.5,"slightDissat":8.6,"veryDissat":1.9,"dissatRate":10.5,"score":3.508,"suicideRate":41.8},{"region":"제주특별자치도","gender":"Male","year":2023,"verySat":14,"slightSat":31.7,"satRate":45.7,"neutral":40.4,"slightDissat":10.2,"veryDissat":3.7,"dissatRate":13.9,"score":3.421,"suicideRate":45.4},{"region":"제주특별자치도","gender":"Male","year":2024,"verySat":12.8,"slightSat":29.6,"satRate":42.4,"neutral":47.2,"slightDissat":8.1,"veryDissat":2.3,"dissatRate":10.4,"score":3.425,"suicideRate":55.3},{"region":"제주특별자치도","gender":"Female","year":2020,"verySat":14,"slightSat":32.9,"satRate":46.9,"neutral":41.3,"slightDissat":9.6,"veryDissat":2.2,"dissatRate":11.8,"score":3.469,"suicideRate":17.2},{"region":"제주특별자치도","gender":"Female","year":2021,"verySat":13.1,"slightSat":25.5,"satRate":38.6,"neutral":41,"slightDissat":17.1,"veryDissat":3.3,"dissatRate":20.4,"score":3.28,"suicideRate":11.1},{"region":"제주특별자치도","gender":"Female","year":2022,"verySat":13.8,"slightSat":34.5,"satRate":48.3,"neutral":39.8,"slightDissat":10.1,"veryDissat":1.7,"dissatRate":11.8,"score":3.483,"suicideRate":10.1},{"region":"제주특별자치도","gender":"Female","year":2023,"verySat":12.3,"slightSat":31.5,"satRate":43.8,"neutral":45.4,"slightDissat":7.9,"veryDissat":2.9,"dissatRate":10.8,"score":3.424,"suicideRate":15.5},{"region":"제주특별자치도","gender":"Female","year":2024,"verySat":12.7,"slightSat":31.6,"satRate":44.3,"neutral":45.7,"slightDissat":8.7,"veryDissat":1.4,"dissatRate":10.1,"score":3.458,"suicideRate":17.3}];
+        
+        // Dynamic Correlation Coefficients pre-calculated
+        const correlationCoefficients = {
+            2020: { Total: -0.5226, Male: -0.5446, Female: -0.0488 },
+            2021: { Total: -0.1126, Male: 0.0158, Female: -0.1667 },
+            2022: { Total: -0.0077, Male: 0.1431, Female: -0.0510 },
+            2023: { Total: -0.2396, Male: -0.1897, Female: 0.1302 },
+            2024: { Total: 0.0386, Male: 0.0569, Female: 0.1419 }
+        };
+
+        // State variables
+        let currentYear = 2024;
+        let currentGender = "Total";
+        let currentMetric = "suicideRate";
+        let currentSort = { column: 'suicideRate', order: 'desc' };
+
+        // Chart Variables
+        let trendChartObj = null;
+        let scatterChartObj = null;
+        let barChartObj = null;
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            updateDashboard();
+            
+            // Event Listeners for Controls
+            document.getElementById('yearSlider').addEventListener('input', (e) => {
+                currentYear = parseInt(e.target.value);
+                updateDashboard();
+            });
+
+            document.getElementById('genderSelect').querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.getElementById('genderSelect').querySelector('button.active').classList.remove('active');
+                    e.target.classList.add('active');
+                    currentGender = e.target.getAttribute('data-gender');
+                    updateDashboard();
+                });
+            });
+
+            document.getElementById('metricSelect').querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.getElementById('metricSelect').querySelector('button.active').classList.remove('active');
+                    e.target.classList.add('active');
+                    currentMetric = e.target.getAttribute('data-metric');
+                    updateBarChart();
+                });
+            });
+        });
+
+        // Tab switcher
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Activate clicked
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.textContent.includes(
+                tabId === 'tabTrend' ? '시계열' : (tabId === 'tabScatter' ? '산점도' : '지자체별')
+            ));
+            if (activeBtn) activeBtn.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            
+            // Redraw charts if needed to fit size
+            if (trendChartObj) trendChartObj.resize();
+            if (scatterChartObj) scatterChartObj.resize();
+            if (barChartObj) barChartObj.resize();
+        }
+
+        // Expand insight card
+        function expandCard(card) {
+            card.classList.toggle('expanded');
+            const ind = card.querySelector('.expand-indicator');
+            if (card.classList.contains('expanded')) {
+                ind.textContent = "접기...";
+            } else {
+                ind.textContent = "더 보기...";
+            }
+        }
+
+        // Calculations & UI Updates
+        function updateDashboard() {
+            // 1. Update metric cards
+            // Find '전국' record for this year and gender
+            const nationalRec = rawDataset.find(d => d.region === '전국' && d.year === currentYear && d.gender === currentGender);
+            
+            if (nationalRec) {
+                document.getElementById('valSatRate').textContent = `${nationalRec.satRate.toFixed(1)}%`;
+                document.getElementById('valSuicideRate').textContent = `${nationalRec.suicideRate.toFixed(1)}명`;
+            }
+            
+            const rVal = correlationCoefficients[currentYear][currentGender];
+            document.getElementById('valCorr').textContent = `${rVal > 0 ? '+' : ''}${rVal.toFixed(4)}`;
+            if (Math.abs(rVal) >= 0.5) {
+                document.getElementById('valCorr').style.color = '#EF4444'; // Red for strong
+            } else if (Math.abs(rVal) >= 0.2) {
+                document.getElementById('valCorr').style.color = '#F59E0B'; // Orange for moderate
+            } else {
+                document.getElementById('valCorr').style.color = '#10B981'; // Green for weak
+            }
+
+            // 2. Update Charts
+            updateScatterChart();
+            updateBarChart();
+            updateTrendChart();
+
+            // 3. Update Table
+            updateTable();
+        }
+
+        // Chart Initializers
+        function initCharts() {
+            // Line chart
+            const ctxTrend = document.getElementById('trendChart').getContext('2d');
+            trendChartObj = new Chart(ctxTrend, {
+                type: 'line',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            title: { display: true, text: '삶의 만족 비율 (%)', color: '#3B82F6' },
+                            ticks: { color: '#9CA3AF' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            title: { display: true, text: '자살률 (인구 10만명당)', color: '#F97316' },
+                            ticks: { color: '#9CA3AF' },
+                            grid: { drawOnChartArea: false } // Only left grid
+                        },
+                        x: {
+                            ticks: { color: '#9CA3AF' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#F3F4F6' } }
+                    }
+                }
+            });
+
+            // Scatter plot
+            const ctxScatter = document.getElementById('scatterChart').getContext('2d');
+            scatterChartObj = new Chart(ctxScatter, {
+                type: 'scatter',
+                data: { datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            min: 25,
+                            max: 60,
+                            title: { display: true, text: '삶의 만족 비율 (%)', color: '#F3F4F6' },
+                            ticks: { color: '#9CA3AF' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        y: {
+                            min: 10,
+                            max: 60,
+                            title: { display: true, text: '자살률 (인구 10만명당)', color: '#F3F4F6' },
+                            ticks: { color: '#9CA3AF' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    return `${ctx.raw.label}: 만족도 ${ctx.raw.x.toFixed(1)}%, 자살률 ${ctx.raw.y.toFixed(1)}명`;
+                                }
+                            }
+                        },
+                        legend: { labels: { color: '#F3F4F6' } }
+                    }
+                }
+            });
+
+            // Bar chart
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            barChartObj = new Chart(ctxBar, {
+                type: 'bar',
+                data: { labels: [], datasets: [] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            ticks: { color: '#9CA3AF' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        },
+                        x: {
+                            ticks: { color: '#9CA3AF' },
+                            grid: { color: 'rgba(255,255,255,0.05)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // Line Chart Redraw
+        function updateTrendChart() {
+            const trendData = rawDataset.filter(d => d.region === '전국' && d.gender === currentGender);
+            trendData.sort((a,b) => a.year - b.year);
+            
+            const labels = trendData.map(d => `${d.year}년`);
+            const satRates = trendData.map(d => d.satRate);
+            const suicideRates = trendData.map(d => d.suicideRate);
+
+            trendChartObj.data.labels = labels;
+            trendChartObj.data.datasets = [
+                {
+                    label: '주관적 삶의 만족 비율 (%)',
+                    data: satRates,
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    yAxisID: 'y',
+                    borderWidth: 3,
+                    tension: 0.3
+                },
+                {
+                    label: '자살률 (인구 10만명당)',
+                    data: suicideRates,
+                    borderColor: '#F97316',
+                    backgroundColor: 'rgba(249, 115, 22, 0.2)',
+                    yAxisID: 'y1',
+                    borderWidth: 3,
+                    tension: 0.3
+                }
+            ];
+            trendChartObj.update();
+        }
+
+        // Scatter Chart Redraw
+        function updateScatterChart() {
+            const regData = rawDataset.filter(d => d.region !== '전국' && d.year === currentYear && d.gender === currentGender);
+            
+            const points = regData.map(d => ({
+                x: d.satRate,
+                y: d.suicideRate,
+                label: d.region
+            }));
+
+            // Calculate simple linear regression y = ax + b
+            let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+            const n = points.length;
+            if (n > 0) {
+                points.forEach(p => {
+                    sumX += p.x;
+                    sumY += p.y;
+                    sumXY += p.x * p.y;
+                    sumXX += p.x * p.x;
+                });
+                const meanX = sumX / n;
+                const meanY = sumY / n;
+                
+                const slope = (sumXY - n * meanX * meanY) / (sumXX - n * meanX * meanX);
+                const intercept = meanY - slope * meanX;
+
+                const linePoints = [
+                    { x: 25, y: slope * 25 + intercept },
+                    { x: 60, y: slope * 60 + intercept }
+                ];
+
+                scatterChartObj.data.datasets = [
+                    {
+                        label: `${currentYear}년 지자체별 분포`,
+                        data: points,
+                        backgroundColor: '#F97316',
+                        borderColor: '#EA580C',
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    },
+                    {
+                        label: '추세선 (Linear Regression)',
+                        data: linePoints,
+                        type: 'line',
+                        borderColor: 'rgba(59, 130, 246, 0.8)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false,
+                        pointRadius: 0
+                    }
+                ];
+            } else {
+                scatterChartObj.data.datasets = [];
+            }
+            scatterChartObj.update();
+        }
+
+        // Bar Chart Redraw
+        function updateBarChart() {
+            const regData = rawDataset.filter(d => d.region !== '전국' && d.year === currentYear && d.gender === currentGender);
+            regData.sort((a,b) => b[currentMetric] - a[currentMetric]);
+
+            const labels = regData.map(d => d.region);
+            const values = regData.map(d => d[currentMetric]);
+
+            barChartObj.data.labels = labels;
+            barChartObj.data.datasets = [{
+                data: values,
+                backgroundColor: currentMetric === 'suicideRate' ? 'rgba(249, 115, 22, 0.75)' : 'rgba(59, 130, 246, 0.75)',
+                borderColor: currentMetric === 'suicideRate' ? '#F97316' : '#3B82F6',
+                borderWidth: 1,
+                borderRadius: 4
+            }];
+            barChartObj.update();
+        }
+
+        // Sort Table
+        function sortTable(column) {
+            if (currentSort.column === column) {
+                currentSort.order = currentSort.order === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.order = 'desc';
+            }
+            updateTable();
+        }
+
+        // Render Data Table
+        function updateTable() {
+            const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            let filtered = rawDataset.filter(d => d.year === currentYear && d.gender === currentGender);
+            if (searchVal) {
+                filtered = filtered.filter(d => d.region.toLowerCase().includes(searchVal));
+            }
+
+            filtered.sort((a, b) => {
+                let valA = a[currentSort.column];
+                let valB = b[currentSort.column];
+                
+                if (typeof valA === 'string') {
+                    return currentSort.order === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                }
+                
+                return currentSort.order === 'asc' ? valA - valB : valB - valA;
+            });
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            filtered.forEach(d => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight:600; color:#3B82F6;">${d.region}</td>
+                    <td>${d.year}년</td>
+                    <td style="font-family:'Outfit', sans-serif;">${d.satRate.toFixed(1)}%</td>
+                    <td style="font-family:'Outfit', sans-serif;">${d.score.toFixed(3)}</td>
+                    <td style="font-family:'Outfit', sans-serif; font-weight:600; color:#F97316;">${d.suicideRate.toFixed(1)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
