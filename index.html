@@ -22,7 +22,7 @@
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@100;400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght=100;400;700;900&display=swap');
 
         body {
             font-family: 'Pretendard', sans-serif;
@@ -191,8 +191,9 @@
                 <span class="text-cyan-500 font-bold text-sm tracking-widest uppercase mb-2 block">Case Studies</span>
                 <h3 class="text-4xl font-black">주요 과제 수행 이력</h3>
             </div>
+            <!-- 총 과제 수 11개로 변경 -->
             <div class="text-sm opacity-50 font-mono" data-aos="fade-left">
-                [ TOTAL 10 ASSIGNMENTS COMPLETED ]
+                [ TOTAL 11 ASSIGNMENTS COMPLETED ]
             </div>
         </div>
 
@@ -248,7 +249,7 @@
             }
         });
 
-        // 프로젝트 데이터 구성 (10번 카드 업데이트 반영)
+        // 프로젝트 데이터 구성 (11번째 기말 과제 카드 데이터 신규 추가)
         const projects = [
             { 
                 id: 1, 
@@ -356,7 +357,18 @@
                 result: "", 
                 color: "#ff4d4d", 
                 glow: "rgba(255, 77, 77, 0.4)",
-                link: "./10/index.html", // ./10/index.html로 이동하도록 수정
+                link: "./10/index.html",
+                btnText: "결과보기",     
+                showPlusBtn: false
+            },
+            { 
+                id: 11, 
+                title: "기말 과제", // 추가된 11번째 기말 과제 카드
+                tools: "AI Project", 
+                result: "", 
+                color: "#2ec4b6", // 세련된 청록색(Teal) 테마 컬러 적용
+                glow: "rgba(46, 196, 182, 0.4)",
+                link: "./11/index.html", // 기말 과제 페이지 연결 경로
                 btnText: "결과보기",     
                 showPlusBtn: false
             }
